@@ -1,21 +1,38 @@
 import { APP_SECRET, getUserId } from '../utils';
 import { compare, hash } from 'bcryptjs';
-import { intArg, mutationType, stringArg } from '@nexus/schema';
+import { inputObjectType, intArg, mutationType, scalarType, stringArg } from '@nexus/schema';
 
 import { sign } from 'jsonwebtoken';
 
+export const InputType = inputObjectType({
+  name: 'UserInput',
+  definition(t) {
+    t.string('email', {
+      required: true,
+    });
+    t.string('password', {
+      required: true,
+    });
+    t.string('name');
+    t.string('nickname');
+    t.string('birthday');
+    t.string('gender');
+    t.string('string');
+    t.string('statusMessage');
+  },
+});
+
 export const Mutation = mutationType({
   definition(t) {
-    t.field('signup', {
+    t.field('signUp', {
       type: 'AuthPayload',
       args: {
-        name: stringArg(),
-        email: stringArg({ nullable: false }),
-        password: stringArg({ nullable: false }),
+        user: 'UserInput',
       },
-      resolve: async (_parent, { name, email, password }, ctx) => {
+      resolve: async (_parent, { user }, ctx) => {
+        const { name, email, password } = user;
         const hashedPassword = await hash(password, 10);
-        const user = await ctx.prisma.user.create({
+        const created = await ctx.prisma.user.create({
           data: {
             name,
             email,
@@ -23,8 +40,8 @@ export const Mutation = mutationType({
           },
         });
         return {
-          token: sign({ userId: user.id }, APP_SECRET),
-          user,
+          token: sign({ userId: created.id }, APP_SECRET),
+          user: created,
         };
       },
     });

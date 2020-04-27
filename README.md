@@ -28,6 +28,7 @@ yarn generate
 #### Init migration
 
 1. Change models in `schema.prisma`.
+   > Note that `prisma/migrations` dir is included in `.gitignore` in this repo but it should not be ignored in production.
 2. Run migration script.
    ```
    yarn migrate:save
