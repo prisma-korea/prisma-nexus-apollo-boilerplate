@@ -2,7 +2,7 @@
 
 > Boilerplate for typescript apollo server using prisma (known as Prisma 2).
 
-> Specification
+## Specification
 * [node](https://nodejs.org)
 * [typescript](https://typescriptlang.org)
 * [prisma](https://www.prisma.io)
