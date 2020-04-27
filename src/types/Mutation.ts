@@ -1,6 +1,6 @@
 import { APP_SECRET, getUserId } from '../utils';
 import { compare, hash } from 'bcryptjs';
-import { inputObjectType, intArg, mutationType, scalarType, stringArg } from '@nexus/schema';
+import { inputObjectType, intArg, mutationType, stringArg } from '@nexus/schema';
 
 import { sign } from 'jsonwebtoken';
 
@@ -15,9 +15,9 @@ export const InputType = inputObjectType({
     });
     t.string('name');
     t.string('nickname');
-    t.string('birthday');
+    t.date('birthday');
     t.string('gender');
-    t.string('string');
+    t.string('phone');
     t.string('statusMessage');
   },
 });

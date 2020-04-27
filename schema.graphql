@@ -80,12 +80,12 @@ type User {
 }
 
 input UserInput {
-  birthday: String
+  birthday: Date
   email: String!
   gender: String
   name: String
   nickname: String
   password: String!
+  phone: String
   statusMessage: String
-  string: String
 }

@@ -1,9 +1,4 @@
-import { enumType, objectType } from '@nexus/schema';
-
-export const AuthType = enumType({
-  name: 'AuthType',
-  members: ['Email', 'Facebook', 'Google', 'Apple'],
-});
+import { objectType } from '@nexus/schema';
 
 export const Profile = objectType({
   name: 'Profile',
