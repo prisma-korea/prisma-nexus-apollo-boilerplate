@@ -16,6 +16,10 @@ const envPath = env === 'development'
 
 require('dotenv').config({ path: envPath });
 
+const { JWT_SECRET } = process.env;
+
+export const APP_SECRET = JWT_SECRET;
+
 const createApolloServer = (): ApolloServer => new ApolloServer({
   schema,
   context: createContext,

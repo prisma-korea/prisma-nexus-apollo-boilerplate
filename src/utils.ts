@@ -1,10 +1,6 @@
 import { Context } from './context';
 import { verify } from 'jsonwebtoken';
 
-const { JWT_SECRET } = process.env;
-
-export const APP_SECRET = JWT_SECRET;
-
 interface Token {
   userId: string;
 }
