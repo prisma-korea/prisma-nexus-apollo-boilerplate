@@ -1,8 +1,7 @@
+import { APP_SECRET, getUserId } from '../utils';
 import { compare, hash } from 'bcryptjs';
 import { inputObjectType, intArg, mutationType, stringArg } from '@nexus/schema';
 
-import { APP_SECRET } from '../server';
-import { getUserId } from '../utils';
 import { sign } from 'jsonwebtoken';
 
 export const InputType = inputObjectType({

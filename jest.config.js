@@ -1,9 +1,12 @@
+const { defaults: tsjPreset } = require('ts-jest/presets');
+
 module.exports = {
   globals: {
     'ts-jest': {
       tsConfig: 'tsconfig.json',
     },
   },
+  preset: 'ts-jest',
   moduleFileExtensions: [
     'ts',
     'js',
@@ -11,6 +14,7 @@ module.exports = {
   ],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
+    ...tsjPreset.transform,
   },
   testMatch: [
     '**/tests/**/*.test.(ts|js)',
