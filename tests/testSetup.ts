@@ -7,9 +7,10 @@ const port = 4000;
 let server: Http2Server;
 export const testHost = `http://localhost:${port}/graphql`;
 
-beforeAll(async () => {
+beforeAll(async (done) => {
   const app: express.Application = createApp();
   server = await startServer(app);
+  done();
 });
 
 afterAll(async () => {
