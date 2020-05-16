@@ -1,8 +1,8 @@
 {
-  "name": "ts-yoga-prisma",
+  "name": "ts-apollo-prisma",
   "version": "1.0.0",
-  "description": "Typescript yoga prisma boilerplate",
-  "repository": "https://github.com/dooboolab/ts-yoga-prisma",
+  "description": "Typescript apollo prisma boilerplate",
+  "repository": "https://github.com/dooboolab/ts-apollo-prisma",
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --no-notify --respawn --transpileOnly src/server.ts",
