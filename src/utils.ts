@@ -19,7 +19,7 @@ interface Token {
 }
 
 export function getUserId(context: Context): string {
-  const Authorization = context.request.get('Authorization');
+  const Authorization = context.request.req.get('Authorization');
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '');
     const verifiedToken = verify(token, APP_SECRET) as Token;
