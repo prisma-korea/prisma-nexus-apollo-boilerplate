@@ -1,8 +1,8 @@
 {
-  "name": "ts-yoga-prisma",
+  "name": "ts-apollo-prisma",
   "version": "1.0.0",
-  "description": "Typescript yoga prisma boilerplate",
-  "repository": "https://github.com/dooboolab/ts-yoga-prisma",
+  "description": "Typescript apollo prisma boilerplate",
+  "repository": "https://github.com/dooboolab/ts-apollo-prisma",
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --no-notify --respawn --transpileOnly src/server.ts",
@@ -11,7 +11,7 @@
     "build": "npm -s run clean && npm -s run generate && tsc",
     "lint": "eslint src/**/**/*.ts && eslint tests/**/**/*.ts",
     "tsc": "tsc",
-    "test": "dotenv -e ./dotenv/test.env -- prisma migrate up --experimental && yarn generate && NODE_ENV=test jest --runInBand --detectOpenHandles",
+    "test": "dotenv -e ./dotenv/test.env -- prisma migrate up --experimental && yarn generate && NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
     "generate:test": "npm -s run generate:prisma:test && npm -s run generate:nexus:test",
     "generate:prisma:test": "dotenv -e ./dotenv/test.env -- prisma generate",
     "generate:nexus:test": "dotenv -e ./dotenv/test.env  -- ts-node --transpile-only src/schema",
@@ -22,6 +22,7 @@
     "postinstall": "npm -s run generate",
     "migrate:save": "dotenv -e ./dotenv/prod.env -- prisma migrate save --experimental",
     "migrate:up": "dotenv -e ./dotenv/prod.env -- prisma migrate up --experimental",
+    "migrate:down": "dotenv -e ./dotenv/prod.env -- prisma migrate down 1 --experimental",
     "studio": "prisma studio --experimental"
   },
   "dependencies": {
