@@ -1,4 +1,4 @@
-import { APP_SECRET, getUserId } from '../utils';
+import { APP_SECRET, getUserId } from '../../utils';
 import { compare, hash } from 'bcryptjs';
 import { inputObjectType, intArg, mutationType, stringArg } from '@nexus/schema';
 
