@@ -6,6 +6,8 @@ import { createServer as createHttpServer } from 'http';
 import express from 'express';
 import { schema } from './schema';
 
+const { PORT = 4000 } = process.env;
+
 const createApolloServer = (): ApolloServer => new ApolloServer({
   schema,
   context: createContext,
@@ -23,7 +25,7 @@ const initializeApolloServer = (apollo: ApolloServer, app: express.Application):
 
   return (): void => {
     process.stdout.write(
-      `🚀 Server ready at http://localhost:4000${apollo.graphqlPath}\n`,
+      `🚀 Server ready at http://localhost:${PORT}${apollo.graphqlPath}\n`,
     );
   };
 };
@@ -34,7 +36,7 @@ export const startServer = async (app: express.Application): Promise<Http2Server
   apollo.installSubscriptionHandlers(httpServer);
   const handleApolloServerInitilized = initializeApolloServer(apollo, app);
 
-  return httpServer.listen({ port: 4000 }, () => {
+  return httpServer.listen({ port: PORT }, () => {
     handleApolloServerInitilized();
   });
 };
