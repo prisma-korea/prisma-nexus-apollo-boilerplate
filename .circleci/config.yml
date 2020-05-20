@@ -44,6 +44,12 @@ jobs:
             rm -rf ./dist
 
       - run:
+          name: Migration
+          working_directory: .
+          command: |
+            yarn migrate:test
+
+      - run:
           name: Jest test
           working_directory: .
           command: |
