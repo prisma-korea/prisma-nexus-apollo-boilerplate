@@ -9,6 +9,5 @@ package-lock.json
 dotenv/prod.env
 dotenv/.env
 prisma/.env
-prisma/migrations
 src/generated
 
