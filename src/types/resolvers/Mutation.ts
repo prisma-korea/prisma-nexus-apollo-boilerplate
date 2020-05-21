@@ -1,10 +1,11 @@
 import { APP_SECRET, getUserId } from '../../utils';
+import { USER_SIGNED_IN, USER_UPDATED } from '../../types/resolvers/Subscription';
 import { compare, hash } from 'bcryptjs';
 import { inputObjectType, intArg, mutationType, stringArg } from '@nexus/schema';
 
 import { sign } from 'jsonwebtoken';
 
-export const InputType = inputObjectType({
+export const UserInputType = inputObjectType({
   name: 'UserInput',
   definition(t) {
     t.string('email', {
@@ -17,6 +18,18 @@ export const InputType = inputObjectType({
     t.string('nickname');
     t.date('birthday');
     t.string('gender');
+    t.string('phone');
+    t.string('statusMessage');
+  },
+});
+
+export const UserUpdateInputType = inputObjectType({
+  name: 'UserUpdateInput',
+  definition(t) {
+    t.string('email');
+    t.string('name');
+    t.string('nickname');
+    t.date('birthday');
     t.string('phone');
     t.string('statusMessage');
   },
@@ -39,6 +52,7 @@ export const Mutation = mutationType({
             password: hashedPassword,
           },
         });
+
         return {
           token: sign({ userId: created.id }, APP_SECRET),
           user: created,
@@ -46,13 +60,15 @@ export const Mutation = mutationType({
       },
     });
 
-    t.field('login', {
+    t.field('signIn', {
       type: 'AuthPayload',
       args: {
         email: stringArg({ nullable: false }),
         password: stringArg({ nullable: false }),
       },
       resolve: async (_parent, { email, password }, ctx) => {
+        const { pubsub } = ctx;
+
         const user = await ctx.prisma.user.findOne({
           where: {
             email,
@@ -65,10 +81,32 @@ export const Mutation = mutationType({
         if (!passwordValid) {
           throw new Error('Invalid password');
         }
+        pubsub.publish(USER_SIGNED_IN, user);
         return {
           token: sign({ userId: user.id }, APP_SECRET),
           user,
         };
+      },
+    });
+
+    t.field('updateProfile', {
+      type: 'User',
+      args: {
+        user: 'UserUpdateInput',
+      },
+      resolve: async (_parent, { user }, ctx) => {
+        const { pubsub } = ctx;
+
+        const userId = getUserId(ctx);
+        if (!userId) throw new Error('Could not authenticate user.');
+
+        const updated = await ctx.prisma.user.update({
+          where: { id: userId },
+          data: user,
+        });
+
+        pubsub.publish(USER_UPDATED, updated);
+        return updated;
       },
     });
 
@@ -81,6 +119,7 @@ export const Mutation = mutationType({
       resolve: (parent, { title, content }, ctx) => {
         const userId = getUserId(ctx);
         if (!userId) throw new Error('Could not authenticate user.');
+
         return ctx.prisma.post.create({
           data: {
             title,
