@@ -1,5 +1,8 @@
 # ts-apollo-prisma
 
+[![CircleCI](https://circleci.com/gh/dooboolab/ts-apollo-prisma.svg?style=svg)](https://circleci.com/gh/dooboolab/ts-apollo-prisma)
+[![codecov](https://codecov.io/gh/dooboolab/ts-apollo-prisma/branch/master/graph/badge.svg)](https://codecov.io/gh/dooboolab/ts-apollo-prisma)
+
 > Boilerplate for typescript apollo server using prisma (known as Prisma 2).
 
 ## Specification
