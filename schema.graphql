@@ -31,9 +31,10 @@ enum Gender {
 type Mutation {
   createDraft(content: String, title: String!): Post!
   deletePost(id: Int!): Post
-  login(email: String!, password: String!): AuthPayload!
   publish(id: Int): Post
+  signIn(email: String!, password: String!): AuthPayload!
   signUp(user: UserInput): AuthPayload!
+  updateProfile(user: UserUpdateInput): User!
 }
 
 type Post {
@@ -59,6 +60,11 @@ type Query {
   filterPosts(searchString: String): [Post!]!
   me: User
   post(id: Int): Post
+}
+
+type Subscription {
+  userSignedIn: User!
+  userUpdated(userId: String!): User!
 }
 
 """The `Upload` scalar type represents a file upload."""
@@ -88,6 +94,15 @@ input UserInput {
   name: String
   nickname: String
   password: String!
+  phone: String
+  statusMessage: String
+}
+
+input UserUpdateInput {
+  birthday: Date
+  email: String
+  name: String
+  nickname: String
   phone: String
   statusMessage: String
 }
