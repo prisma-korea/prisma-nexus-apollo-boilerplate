@@ -1,81 +1,37 @@
 import { GraphQLClient, request } from 'graphql-request';
+import {
+  createDraftMutation,
+  deletePostMutation,
+  feedQuery,
+  filterPostsQuery,
+  meQuery,
+  postQuery,
+  publishMutation,
+  signInMutation,
+  signUpMutation,
+  updateProfileMutation,
+} from './queries';
 
 import { testHost } from './testSetup';
 
 let client: GraphQLClient;
 
-const signUpMutation = /* GraphQL */`
-  mutation signUp($user: UserCreateInput) {
-    signUp(user: $user) {
-      token,
-      user {
-        email
-      }
-    }
-  }
-`;
+const userVariables = {
+  user: {
+    name: 'dooboo1',
+    email: 'dooboo@dooboolab.com',
+    password: 'password',
+  },
+};
 
-const signInMutation = /* GraphQL */`
-  mutation signIn($email: String! $password: String!) {
-    signIn(email: $email password: $password) {
-      token
-      user {
-        email
-      }
-    }
-  }
-`;
-
-const updateProfileMutation = /* GraphQL */`
-  mutation updateProfile($user: UserUpdateInput) {
-    updateProfile(user: $user) {
-      name
-    }
-  }
-`;
-
-const createDraftMutation = /* GraphQL */`
-  mutation createDraft($title: String! $content: String!) {
-    createDraft(title: $title content: $content) {
-      id
-      title
-    }
-  }
-`;
-
-const publishMutation = /* GraphQL */`
-  mutation publish($id: Int!) {
-    publish(id: $id) {
-      id
-      title
-    }
-  }
-`;
-
-const deletePostMutation = /* GraphQL */`
-  mutation deletePost($id: Int!) {
-    deletePost(id: $id) {
-      id
-    }
-  }
-`;
-
-describe('Resolver - User', () => {
+describe('Resolver - Mutation', () => {
   it('should signUp user', async () => {
-    const variables = {
-      user: {
-        name: 'dooboo1',
-        email: 'dooboo@dooboolab.com',
-        password: 'password',
-      },
-    };
-
-    const response = await request(testHost, signUpMutation, variables);
+    const response = await request(testHost, signUpMutation, userVariables);
 
     expect(response).toHaveProperty('signUp');
     expect(response.signUp).toHaveProperty('token');
     expect(response.signUp).toHaveProperty('user');
-    expect(response.signUp.user.email).toEqual(variables.user.email);
+    expect(response.signUp.user.email).toEqual(userVariables.user.email);
   });
 
   it('should throw error when user does not exists', async () => {
@@ -165,5 +121,44 @@ describe('Resolver - User', () => {
       expect(response.deletePost).toHaveProperty('id');
       expect(response.deletePost.id).toEqual(1);
     });
+  });
+});
+
+describe('Resolver - Query', () => {
+  it('should query me', async () => {
+    const response = await client.request(meQuery);
+
+    expect(response).toHaveProperty('me');
+    expect(response.me.email).toEqual(userVariables.user.email);
+  });
+
+  it('should query feed', async () => {
+    const response = await client.request(feedQuery);
+
+    expect(response).toHaveProperty('feed');
+    expect(response.feed).toHaveLength(0);
+  });
+
+  it('should query feed', async () => {
+    const response = await client.request(feedQuery);
+
+    expect(response).toHaveProperty('feed');
+    expect(response.feed).toHaveLength(0);
+  });
+
+  it('should query post', async () => {
+    const response = await client.request(postQuery, {
+      id: 1,
+    });
+
+    expect(response).toHaveProperty('post');
+  });
+
+  it('should filter posts', async () => {
+    const response = await client.request(filterPostsQuery, {
+      searchString: 'title',
+    });
+
+    expect(response).toHaveProperty('filterPosts');
   });
 });
