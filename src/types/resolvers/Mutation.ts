@@ -6,7 +6,7 @@ import { inputObjectType, intArg, mutationType, stringArg } from '@nexus/schema'
 import { sign } from 'jsonwebtoken';
 
 export const UserInputType = inputObjectType({
-  name: 'UserInput',
+  name: 'UserCreateInput',
   definition(t) {
     t.string('email', {
       required: true,
@@ -40,7 +40,7 @@ export const Mutation = mutationType({
     t.field('signUp', {
       type: 'AuthPayload',
       args: {
-        user: 'UserInput',
+        user: 'UserCreateInput',
       },
       resolve: async (_parent, { user }, ctx) => {
         const { name, email, password } = user;
@@ -98,7 +98,6 @@ export const Mutation = mutationType({
         const { pubsub } = ctx;
 
         const userId = getUserId(ctx);
-        if (!userId) throw new Error('Could not authenticate user.');
 
         const updated = await ctx.prisma.user.update({
           where: { id: userId },
@@ -118,7 +117,6 @@ export const Mutation = mutationType({
       },
       resolve: (parent, { title, content }, ctx) => {
         const userId = getUserId(ctx);
-        if (!userId) throw new Error('Could not authenticate user.');
 
         return ctx.prisma.post.create({
           data: {
