@@ -33,7 +33,7 @@ type Mutation {
   deletePost(id: Int!): Post
   publish(id: Int): Post
   signIn(email: String!, password: String!): AuthPayload!
-  signUp(user: UserInput): AuthPayload!
+  signUp(user: UserCreateInput): AuthPayload!
   updateProfile(user: UserUpdateInput): User!
 }
 
@@ -87,7 +87,7 @@ type User {
   updatedAt: DateTime!
 }
 
-input UserInput {
+input UserCreateInput {
   birthday: Date
   email: String!
   gender: String
