@@ -32,6 +32,7 @@ export const UserUpdateInputType = inputObjectType({
     t.date('birthday');
     t.string('phone');
     t.string('statusMessage');
+    t.gender('gender');
   },
 });
 

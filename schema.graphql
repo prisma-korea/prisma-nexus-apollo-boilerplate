@@ -23,10 +23,7 @@ scalar Date
 
 scalar DateTime
 
-enum Gender {
-  Female
-  Male
-}
+scalar Gender
 
 type Mutation {
   createDraft(content: String, title: String!): Post!
@@ -101,6 +98,7 @@ input UserCreateInput {
 input UserUpdateInput {
   birthday: Date
   email: String
+  gender: Gender
   name: String
   nickname: String
   phone: String
