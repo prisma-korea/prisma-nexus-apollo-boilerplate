@@ -28,6 +28,8 @@ enum Gender {
   Male
 }
 
+scalar GenderScalar
+
 type Mutation {
   createDraft(content: String, title: String!): Post!
   deletePost(id: Int!): Post
@@ -101,6 +103,7 @@ input UserCreateInput {
 input UserUpdateInput {
   birthday: Date
   email: String
+  gender: GenderScalar
   name: String
   nickname: String
   phone: String
