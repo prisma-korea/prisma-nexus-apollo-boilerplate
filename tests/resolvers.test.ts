@@ -79,13 +79,29 @@ describe('Resolver - Mutation', () => {
       const variables = {
         user: {
           name: 'HelloBro',
+          gender: 'Female',
         },
       };
 
       const response = await client.request(updateProfileMutation, variables);
       expect(response).toHaveProperty('updateProfile');
       expect(response.updateProfile).toHaveProperty('name');
+      expect(response.updateProfile).toHaveProperty('gender');
       expect(response.updateProfile.name).toEqual(variables.user.name);
+      expect(response.updateProfile.gender).toEqual(variables.user.gender);
+    });
+
+    it('should throw error when invalid gender value is given', async () => {
+      const variables = {
+        user: {
+          name: 'HelloBro',
+          gender: 'Woman',
+        },
+      };
+
+      expect(async () => {
+        await client.request(updateProfileMutation, variables);
+      }).rejects.toThrow();
     });
 
     it('should create auth user`s draft', async () => {
