@@ -20,6 +20,6 @@ module.exports = {
   testMatch: [
     '**/tests/**/*.test.(ts|js)',
   ],
-  setupFilesAfterEnv: ['./tests/testSetup.ts'],
+  setupFilesAfterEnv: ['./tests/setup/testSetup.ts'],
   testEnvironment: 'node',
 };
