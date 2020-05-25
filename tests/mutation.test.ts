@@ -2,10 +2,6 @@ import { GraphQLClient, request } from 'graphql-request';
 import {
   createDraftMutation,
   deletePostMutation,
-  feedQuery,
-  filterPostsQuery,
-  meQuery,
-  postQuery,
   publishMutation,
   signInMutation,
   signUpMutation,
@@ -121,44 +117,5 @@ describe('Resolver - Mutation', () => {
       expect(response.deletePost).toHaveProperty('id');
       expect(response.deletePost.id).toEqual(1);
     });
-  });
-});
-
-describe('Resolver - Query', () => {
-  it('should query me', async () => {
-    const response = await client.request(meQuery);
-
-    expect(response).toHaveProperty('me');
-    expect(response.me.email).toEqual(userVariables.user.email);
-  });
-
-  it('should query feed', async () => {
-    const response = await client.request(feedQuery);
-
-    expect(response).toHaveProperty('feed');
-    expect(response.feed).toHaveLength(0);
-  });
-
-  it('should query feed', async () => {
-    const response = await client.request(feedQuery);
-
-    expect(response).toHaveProperty('feed');
-    expect(response.feed).toHaveLength(0);
-  });
-
-  it('should query post', async () => {
-    const response = await client.request(postQuery, {
-      id: 1,
-    });
-
-    expect(response).toHaveProperty('post');
-  });
-
-  it('should filter posts', async () => {
-    const response = await client.request(filterPostsQuery, {
-      searchString: 'title',
-    });
-
-    expect(response).toHaveProperty('filterPosts');
   });
 });
