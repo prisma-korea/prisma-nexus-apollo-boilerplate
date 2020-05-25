@@ -1,8 +1,6 @@
 import { GraphQLClient, request } from 'graphql-request';
 import {
-  createDraftMutation,
-  deletePostMutation,
-  publishMutation,
+  meQuery,
   signInMutation,
   signUpMutation,
   updateProfileMutation,
@@ -20,7 +18,7 @@ const userVariables = {
   },
 };
 
-describe('Resolver - Mutation', () => {
+describe('Resolver - User', () => {
   it('should signUp user', async () => {
     const response = await request(testHost, signUpMutation, userVariables);
 
@@ -71,51 +69,24 @@ describe('Resolver - Mutation', () => {
   });
 
   describe('Resolver - after signIn', () => {
-    it('should update user profile', async () => {
-      const variables = {
-        user: {
-          name: 'HelloBro',
-        },
-      };
+    const variables = {
+      user: {
+        name: 'HelloBro',
+      },
+    };
 
+    it('should update user profile', async () => {
       const response = await client.request(updateProfileMutation, variables);
       expect(response).toHaveProperty('updateProfile');
       expect(response.updateProfile).toHaveProperty('name');
       expect(response.updateProfile.name).toEqual(variables.user.name);
     });
 
-    it('should create auth user`s draft', async () => {
-      const variables = {
-        title: 'title',
-        content: 'content',
-      };
+    it('should query me and get updated name', async () => {
+      const response = await client.request(meQuery);
 
-      const response = await client.request(createDraftMutation, variables);
-      expect(response).toHaveProperty('createDraft');
-      expect(response.createDraft).toHaveProperty('id');
-      expect(response.createDraft.title).toEqual('title');
-    });
-
-    it('should publish user`s draft', async () => {
-      const variables = {
-        id: 1,
-      };
-
-      const response = await client.request(publishMutation, variables);
-      expect(response).toHaveProperty('publish');
-      expect(response.publish).toHaveProperty('id');
-      expect(response.publish.title).toEqual('title');
-    });
-
-    it('should delete user`s draft', async () => {
-      const variables = {
-        id: 1,
-      };
-
-      const response = await client.request(deletePostMutation, variables);
-      expect(response).toHaveProperty('deletePost');
-      expect(response.deletePost).toHaveProperty('id');
-      expect(response.deletePost.id).toEqual(1);
+      expect(response).toHaveProperty('me');
+      expect(response.me.name).toEqual(variables.user.name);
     });
   });
 });

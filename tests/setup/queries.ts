@@ -59,6 +59,7 @@ export const meQuery = /* GraphQL */`
     me {
       id
       email
+      name
     }
   }
 `;
