@@ -30,9 +30,10 @@ const initializeApolloServer = (apollo: ApolloServer, app: express.Application):
   };
 };
 
+export let apollo;
 export const startServer = async (app: express.Application): Promise<Http2Server> => {
   const httpServer = createHttpServer(app);
-  const apollo = createApolloServer();
+  apollo = createApolloServer();
   apollo.installSubscriptionHandlers(httpServer);
   const handleApolloServerInitilized = initializeApolloServer(apollo, app);
 
