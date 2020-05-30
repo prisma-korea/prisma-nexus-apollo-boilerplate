@@ -1,4 +1,4 @@
-import { asNexusMethod, enumType } from '@nexus/schema';
+import { asNexusMethod, enumType, scalarType } from '@nexus/schema';
 
 import { GraphQLDate } from 'graphql-iso-date';
 import { GraphQLUpload } from 'graphql-upload';
@@ -8,12 +8,23 @@ export const AuthType = enumType({
   members: ['Email', 'Facebook', 'Google', 'Apple'],
 });
 
-export const Gender = enumType({
+enum GenderType {
+  Male = 'Male',
+  Female = 'Female',
+}
+export const Gender = scalarType({
   name: 'Gender',
-  members: ['Male', 'Female'],
+  asNexusMethod: 'gender',
+  parseValue(value: GenderType): GenderType {
+    if (GenderType[value]) {
+      return value;
+    }
+  },
+  serialize(value) {
+    return value;
+  },
 });
 
 export const Upload = GraphQLUpload;
 export const DateTime = GraphQLDate;
 export const GQLDate = asNexusMethod(GraphQLDate, 'date');
-// export const GenderEnum = asNexusMethod(Gender, 'gender');

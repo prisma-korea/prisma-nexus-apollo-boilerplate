@@ -24,6 +24,7 @@ export const updateProfileMutation = /* GraphQL */`
   mutation updateProfile($user: UserUpdateInput) {
     updateProfile(user: $user) {
       name
+      gender
     }
   }
 `;
