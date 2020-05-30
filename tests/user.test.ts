@@ -4,9 +4,9 @@ import {
   signInMutation,
   signUpMutation,
   updateProfileMutation,
+  userUpdatedSubscription,
 } from './setup/queries';
-
-import { testHost } from './setup/testSetup';
+import { pubSub, testHost } from './setup/testSetup';
 
 let client: GraphQLClient;
 
@@ -15,6 +15,16 @@ const userVariables = {
     name: 'dooboo1',
     email: 'dooboo@dooboolab.com',
     password: 'password',
+    gender: 'Male',
+  },
+};
+
+const userVariables2 = {
+  user: {
+    name: 'clark',
+    email: 'clark@dooboolab.com',
+    password: 'password',
+    gender: 'Male',
   },
 };
 
@@ -103,6 +113,45 @@ describe('Resolver - User', () => {
 
       expect(response).toHaveProperty('me');
       expect(response.me.name).toEqual(variables.user.name);
+    });
+  });
+
+  describe('Resolver - user Subscription', () => {
+    it('should subscribe userUpdated after updateProfileMutation', async () => {
+      let subscriptionValue;
+      const variables = {
+        user: {
+          name: 'HelloBro',
+          gender: 'Female',
+        },
+      };
+
+      const response = await request(testHost, signUpMutation, userVariables2);
+      const userId = response.signUp.user.id;
+      expect(response.signUp.user.name).toEqual(userVariables2.user.name);
+      expect(response.signUp.user.gender).toEqual(userVariables2.user.gender);
+
+      pubSub.subscribe({
+        query: userUpdatedSubscription,
+        variables: { userId: userId },
+      }).subscribe({
+        next: ({ data }) => {
+          return (subscriptionValue = data.userUpdated);
+        },
+      });
+
+      client = new GraphQLClient(testHost, {
+        headers: {
+          authorization: response.signUp.token,
+        },
+      });
+      const response2 = await client.request(updateProfileMutation, variables);
+
+      expect(response2).toHaveProperty('updateProfile');
+      expect(response2.updateProfile).toHaveProperty('name');
+      expect(response2.updateProfile).toHaveProperty('gender');
+      expect(response2.updateProfile.name).toEqual(subscriptionValue.name);
+      expect(response2.updateProfile.gender).toEqual(subscriptionValue.gender);
     });
   });
 });

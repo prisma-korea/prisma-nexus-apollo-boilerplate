@@ -1,8 +1,7 @@
 import { ApolloClient, MutationOptions, SubscriptionOptions } from 'apollo-client';
-import http2, { Http2Server } from 'http2';
-// import http, { Server } from 'http';
 import { AddressInfo } from 'net';
 import { FetchResult } from 'apollo-link';
+import { Http2Server } from 'http2';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import NodeWebSocket from 'ws';
 import { Observable } from 'apollo-client/util/Observable';
