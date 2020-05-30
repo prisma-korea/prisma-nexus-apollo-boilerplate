@@ -1,9 +1,14 @@
+import gql from 'graphql-tag';
+
 export const signUpMutation = /* GraphQL */`
   mutation signUp($user: UserCreateInput) {
     signUp(user: $user) {
       token,
       user {
+        id
+        name
         email
+        gender
       }
     }
   }
@@ -14,7 +19,10 @@ export const signInMutation = /* GraphQL */`
     signIn(email: $email password: $password) {
       token
       user {
+        id
+        name
         email
+        gender
       }
     }
   }
@@ -90,4 +98,15 @@ export const postQuery = /* GraphQL */`
       title
     }
   }
+`;
+
+export const userUpdatedSubscription = gql`
+subscription userUpdated($userId: String!) {
+  userUpdated(userId: $userId) {
+    id
+    email
+    name
+    gender
+  }
+}
 `;
