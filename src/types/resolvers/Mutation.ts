@@ -17,7 +17,7 @@ export const UserInputType = inputObjectType({
     t.string('name');
     t.string('nickname');
     t.date('birthday');
-    t.string('gender');
+    t.gender('gender');
     t.string('phone');
     t.string('statusMessage');
   },
@@ -44,13 +44,14 @@ export const Mutation = mutationType({
         user: 'UserCreateInput',
       },
       resolve: async (_parent, { user }, ctx) => {
-        const { name, email, password } = user;
+        const { name, email, password, gender } = user;
         const hashedPassword = await hash(password, 10);
         const created = await ctx.prisma.user.create({
           data: {
             name,
             email,
             password: hashedPassword,
+            gender,
           },
         });
 

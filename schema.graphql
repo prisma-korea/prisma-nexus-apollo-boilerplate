@@ -87,7 +87,7 @@ type User {
 input UserCreateInput {
   birthday: Date
   email: String!
-  gender: String
+  gender: Gender
   name: String
   nickname: String
   password: String!
