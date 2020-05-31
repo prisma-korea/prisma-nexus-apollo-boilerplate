@@ -5,7 +5,9 @@ module.exports = {
   globals: {
     'ts-jest': {
       tsConfig: 'tsconfig.json',
+      diagnostics: false,
     },
+    fetch: require("node-fetch"),
   },
   preset: 'ts-jest',
   moduleFileExtensions: [

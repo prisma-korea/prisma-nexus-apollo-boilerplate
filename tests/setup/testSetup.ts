@@ -13,7 +13,7 @@ export const testHost = `http://localhost:${port}/graphql`;
 beforeAll(async (done) => {
   const app: express.Application = createApp();
   server = await startServer(app);
-  exec('yarn migrate:test', (err, stdout): void => {
+  exec('yarn migrate:test', (err): void => {
     if (err) throw new Error(err.message);
     done();
   });
