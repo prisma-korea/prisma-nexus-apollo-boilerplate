@@ -20,11 +20,11 @@
     "generate:prisma": "prisma generate",
     "generate:nexus": "ts-node --transpile-only src/schema",
     "postinstall": "npm -s run generate",
-    "migrate:save": "dotenv -e ./dotenv/prod.env -- prisma migrate save --experimental",
-    "migrate:up": "dotenv -e ./dotenv/prod.env -- prisma migrate up --experimental",
-    "migrate:down": "dotenv -e ./dotenv/prod.env -- prisma migrate down 1 --experimental",
+    "migrate:save": "dotenv -e ./dotenv/.env -- prisma migrate save --experimental",
+    "migrate:up": "dotenv -e ./dotenv/.env -- prisma migrate up --experimental",
+    "migrate:down": "dotenv -e ./dotenv/.env -- prisma migrate down 1 --experimental",
     "migrate:test": "dotenv -e ./dotenv/test.env -- prisma migrate up --experimental",
-    "studio": "prisma studio --experimental"
+    "studio": "dotenv -e ./dotenv/.env -- prisma studio --experimental"
   },
   "dependencies": {
     "@nexus/schema": "^0.13.1",
