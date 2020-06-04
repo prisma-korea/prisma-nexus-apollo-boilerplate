@@ -60,7 +60,7 @@ type Query {
 }
 
 type Subscription {
-  userSignedIn: User!
+  userSignedIn(userId: String!): User!
   userUpdated(userId: String!): User!
 }
 

@@ -24,8 +24,18 @@ interface User {
 
 export const UserSignedIn = subscriptionField('userSignedIn', {
   type: 'User',
-  subscribe: (root, args, ctx) =>
-    ctx.pubsub.asyncIterator<User>([USER_SIGNED_IN]),
+  args: {
+    userId: stringArg({ nullable: false }),
+  },
+  subscribe: withFilter(
+    (_, args, ctx) => {
+      const { pubsub } = ctx;
+      return pubsub.asyncIterator(USER_SIGNED_IN);
+    },
+    (payload, { userId }) => {
+      return payload.id === userId;
+    },
+  ),
   resolve: (payload) => {
     return payload;
   },
