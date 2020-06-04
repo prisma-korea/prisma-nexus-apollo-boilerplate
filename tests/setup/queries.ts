@@ -110,3 +110,15 @@ subscription userUpdated($userId: String!) {
   }
 }
 `;
+
+export const userSignedInSubscription = gql`
+subscription userSignedIn($userId: String!) {
+  userSignedIn(userId: $userId) {
+    id
+    email
+    name
+    gender
+    createdAt
+  }
+}
+`;
