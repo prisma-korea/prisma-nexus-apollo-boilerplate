@@ -1,4 +1,5 @@
 import { GraphQLClient, request } from 'graphql-request';
+import { apolloClient, testHost } from './setup/testSetup';
 import {
   meQuery,
   signInMutation,
@@ -7,7 +8,6 @@ import {
   userSignedInSubscription,
   userUpdatedSubscription,
 } from './setup/queries';
-import { pubSub, testHost } from './setup/testSetup';
 
 let client: GraphQLClient;
 
@@ -125,7 +125,7 @@ describe('Resolver - User', () => {
       expect(response1.signUp.user.name).toEqual(userVariables2.user.name);
       expect(response1.signUp.user.gender).toEqual(userVariables2.user.gender);
 
-      pubSub.subscribe({
+      apolloClient.subscribe({
         query: userSignedInSubscription,
         variables: { userId: userId },
       }).subscribe({
@@ -158,7 +158,7 @@ describe('Resolver - User', () => {
       expect(response.signIn).toHaveProperty('user');
       const userId = response.signIn.user.id;
 
-      pubSub.subscribe({
+      apolloClient.subscribe({
         query: userUpdatedSubscription,
         variables: { userId: userId },
       }).subscribe({
