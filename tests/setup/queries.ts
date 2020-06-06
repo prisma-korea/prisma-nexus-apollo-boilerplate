@@ -23,6 +23,7 @@ export const signInMutation = /* GraphQL */`
         name
         email
         gender
+        createdAt
       }
     }
   }

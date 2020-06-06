@@ -4,6 +4,7 @@ import {
   signInMutation,
   signUpMutation,
   updateProfileMutation,
+  userSignedInSubscription,
   userUpdatedSubscription,
 } from './setup/queries';
 import { pubSub, testHost } from './setup/testSetup';
@@ -117,19 +118,45 @@ describe('Resolver - User', () => {
   });
 
   describe('Resolver - user Subscription', () => {
-    it('should subscribe userUpdated after updateProfileMutation', async () => {
+    it("should subscribe 'userSignedIn' after 'signUp' mutation", async () => {
+      let subscriptionValue;
+      const response1 = await request(testHost, signUpMutation, userVariables2);
+      const userId = response1.signUp.user.id;
+      expect(response1.signUp.user.name).toEqual(userVariables2.user.name);
+      expect(response1.signUp.user.gender).toEqual(userVariables2.user.gender);
+
+      pubSub.subscribe({
+        query: userSignedInSubscription,
+        variables: { userId: userId },
+      }).subscribe({
+        next: ({ data }) => {
+          return (subscriptionValue = data.userSignedIn);
+        },
+      });
+
+      const variables = {
+        email: 'clark@dooboolab.com',
+        password: 'password',
+      };
+      const response2 = await request(testHost, signInMutation, variables);
+      expect(response2).toHaveProperty('signIn');
+      expect(response2.signIn).toHaveProperty('token');
+      expect(response2.signIn).toHaveProperty('user');
+      expect(response2.signIn.user.id).toEqual(subscriptionValue.id);
+      expect(response2.signIn.user.email).toEqual(subscriptionValue.email);
+      expect(response2.signIn.user.name).toEqual(subscriptionValue.name);
+      expect(response2.signIn.user.gender).toEqual(subscriptionValue.gender);
+      expect(response2.signIn.user.createdAt).toEqual(subscriptionValue.createdAt);
+    });
+    it("should subscribe 'userUpdated' after 'updateProfile' mutation", async () => {
       let subscriptionValue;
       const variables = {
-        user: {
-          name: 'HelloBro',
-          gender: 'Female',
-        },
+        email: 'clark@dooboolab.com',
+        password: 'password',
       };
-
-      const response = await request(testHost, signUpMutation, userVariables2);
-      const userId = response.signUp.user.id;
-      expect(response.signUp.user.name).toEqual(userVariables2.user.name);
-      expect(response.signUp.user.gender).toEqual(userVariables2.user.gender);
+      const response = await request(testHost, signInMutation, variables);
+      expect(response.signIn).toHaveProperty('user');
+      const userId = response.signIn.user.id;
 
       pubSub.subscribe({
         query: userUpdatedSubscription,
@@ -142,15 +169,23 @@ describe('Resolver - User', () => {
 
       client = new GraphQLClient(testHost, {
         headers: {
-          authorization: response.signUp.token,
+          authorization: response.signIn.token,
         },
       });
-      const response2 = await client.request(updateProfileMutation, variables);
 
+      const variables2 = {
+        user: {
+          name: 'HelloBro',
+          gender: 'Female',
+        },
+      };
+      const response2 = await client.request(updateProfileMutation, variables2);
       expect(response2).toHaveProperty('updateProfile');
       expect(response2.updateProfile).toHaveProperty('name');
       expect(response2.updateProfile).toHaveProperty('gender');
+      expect(variables2.user.name).toEqual(subscriptionValue.name);
       expect(response2.updateProfile.name).toEqual(subscriptionValue.name);
+      expect(variables2.user.gender).toEqual(subscriptionValue.gender);
       expect(response2.updateProfile.gender).toEqual(subscriptionValue.gender);
     });
   });
