@@ -60,7 +60,7 @@ type Query {
 }
 
 type Subscription {
-  userSignedIn: User!
+  userSignedIn(userId: String!): User!
   userUpdated(userId: String!): User!
 }
 
@@ -87,7 +87,7 @@ type User {
 input UserCreateInput {
   birthday: Date
   email: String!
-  gender: String
+  gender: Gender
   name: String
   nickname: String
   password: String!
