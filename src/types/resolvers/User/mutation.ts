@@ -2,7 +2,7 @@ import { APP_SECRET, getUserId } from '../../../utils';
 import {
   USER_SIGNED_IN,
   USER_UPDATED,
-} from '../Subscription';
+} from './subscription';
 import { compare, hash } from 'bcryptjs';
 import { inputObjectType, mutationField, stringArg } from '@nexus/schema';
 
