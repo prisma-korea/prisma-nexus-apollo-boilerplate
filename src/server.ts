@@ -8,12 +8,14 @@ import express from 'express';
 import { permissions } from './permissions';
 import { schema } from './schema';
 
-const { PORT = 5000 } = process.env;
+const { PORT = 5000, NODE_ENV } = process.env;
 
-const schemaWithMiddleware = applyMiddleware(
-  schema,
-  permissions,
-);
+const schemaWithMiddleware = NODE_ENV === 'test'
+  ? schema
+  : applyMiddleware(
+    schema,
+    permissions,
+  );
 
 const createApolloServer = (): ApolloServer => new ApolloServer({
   schema: schemaWithMiddleware,

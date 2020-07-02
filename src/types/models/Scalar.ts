@@ -9,8 +9,8 @@ export const AuthType = enumType({
 });
 
 enum GenderType {
-  Male = 'Male',
-  Female = 'Female',
+  male = 'male',
+  female = 'female',
 }
 export const Gender = scalarType({
   name: 'Gender',
