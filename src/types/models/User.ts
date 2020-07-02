@@ -26,8 +26,6 @@ export const User = objectType({
     t.model.updatedAt();
     t.model.deletedAt();
     t.model.posts({ pagination: false });
-    t.model.profile({
-      type: 'Profile',
-    });
+    t.model.profile();
   },
 });
