@@ -5,18 +5,18 @@
       "tag": "CreateEnum",
       "enum": "Gender",
       "values": [
-        "Male",
-        "Female"
+        "male",
+        "female"
       ]
     },
     {
       "tag": "CreateEnum",
       "enum": "AuthType",
       "values": [
-        "Email",
-        "Facebook",
-        "Google",
-        "Apple"
+        "email",
+        "facebook",
+        "google",
+        "apple"
       ]
     },
     {
@@ -39,7 +39,7 @@
         "source": "db"
       },
       "argument": "url",
-      "value": "env(\"DATABASE_URL\")"
+      "value": "\"***\""
     },
     {
       "tag": "CreateModel",
@@ -111,7 +111,7 @@
       "model": "User",
       "field": "password",
       "type": "String",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
@@ -165,9 +165,16 @@
     {
       "tag": "CreateField",
       "model": "User",
+      "field": "verified",
+      "type": "Boolean",
+      "arity": "Optional"
+    },
+    {
+      "tag": "CreateField",
+      "model": "User",
       "field": "createdAt",
       "type": "DateTime",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateDirective",
@@ -199,7 +206,7 @@
       "model": "User",
       "field": "updatedAt",
       "type": "DateTime",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateDirective",
@@ -299,21 +306,14 @@
       "model": "Profile",
       "field": "socialId",
       "type": "String",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "Profile",
       "field": "authType",
       "type": "AuthType",
-      "arity": "Required"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Profile",
-      "field": "verified",
-      "type": "Boolean",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",

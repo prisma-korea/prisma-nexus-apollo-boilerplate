@@ -16,7 +16,7 @@ const userVariables = {
     name: 'dooboo1',
     email: 'dooboo@dooboolab.com',
     password: 'password',
-    gender: 'Male',
+    gender: 'male',
   },
 };
 
@@ -25,7 +25,7 @@ const userVariables2 = {
     name: 'clark',
     email: 'clark@dooboolab.com',
     password: 'password',
-    gender: 'Male',
+    gender: 'male',
   },
 };
 
@@ -83,7 +83,7 @@ describe('Resolver - User', () => {
     const variables = {
       user: {
         name: 'HelloBro',
-        gender: 'Male',
+        gender: 'male',
       },
     };
 
@@ -176,7 +176,7 @@ describe('Resolver - User', () => {
       const variables2 = {
         user: {
           name: 'HelloBro',
-          gender: 'Female',
+          gender: 'female',
         },
       };
       const response2 = await client.request(updateProfileMutation, variables2);
