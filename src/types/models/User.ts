@@ -6,7 +6,6 @@ export const Profile = objectType({
     t.model.id();
     t.model.socialId();
     t.model.authType();
-    t.model.verified();
   },
 });
 
@@ -22,6 +21,7 @@ export const User = objectType({
     t.model.birthDay();
     t.model.gender();
     t.model.phone();
+    t.model.verified();
     t.model.createdAt();
     t.model.updatedAt();
     t.model.deletedAt();

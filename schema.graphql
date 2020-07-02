@@ -46,10 +46,9 @@ type Post {
 }
 
 type Profile {
-  authType: AuthType!
+  authType: AuthType
   id: String!
-  socialId: String!
-  verified: Boolean!
+  socialId: String
 }
 
 type Query {
@@ -69,7 +68,7 @@ scalar Upload
 
 type User {
   birthDay: DateTime
-  createdAt: DateTime!
+  createdAt: DateTime
   deletedAt: DateTime
   email: String!
   gender: Gender
@@ -81,7 +80,8 @@ type User {
   posts: [Post!]!
   profile: Profile
   thumbURL: String
-  updatedAt: DateTime!
+  updatedAt: DateTime
+  verified: Boolean
 }
 
 input UserCreateInput {
