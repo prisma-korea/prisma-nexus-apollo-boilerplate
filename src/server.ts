@@ -1,15 +1,22 @@
 import { ApolloServer } from 'apollo-server-express';
 import { Http2Server } from 'http2';
+import { applyMiddleware } from 'graphql-middleware';
 import { createApp } from './app';
 import { createContext } from './context';
 import { createServer as createHttpServer } from 'http';
 import express from 'express';
+import { permissions } from './permissions';
 import { schema } from './schema';
 
 const { PORT = 5000 } = process.env;
 
-const createApolloServer = (): ApolloServer => new ApolloServer({
+const schemaWithMiddleware = applyMiddleware(
   schema,
+  permissions,
+);
+
+const createApolloServer = (): ApolloServer => new ApolloServer({
+  schema: schemaWithMiddleware,
   context: createContext,
   introspection: process.env.NODE_ENV !== 'production',
   playground: process.env.NODE_ENV !== 'production',
