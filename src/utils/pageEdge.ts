@@ -48,12 +48,11 @@ export async function createPageEdges<FindManyArgs, Delegate, WhereInput>({
 
   // totalCount
   // @ts-ignore
-  const resultsForTotalCount = await prismaModel.findMany({
+  const totalCount = await prismaModel.count({
     where: {
       ...whereArgs,
     },
   });
-  const totalCount = resultsForTotalCount.length;
 
   // findManyArgs
   let findManyArgs: FindManyArgs;
