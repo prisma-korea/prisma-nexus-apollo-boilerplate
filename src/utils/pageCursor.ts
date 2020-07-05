@@ -8,23 +8,88 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
   pageInfo: {
      currentPage: number,
      size: number,
+     totalPages: number,
   },
   prismaModel: Delegate,
   findManyArgs: FindManyArgs,
 ) {
-  const { currentPage, size } = pageInfo;
-  const distance = (page - currentPage) * size;
-  const takeSkipArgs = {
-    take: distance < 0 ? -1 : 1,
-    skip: distance < 0 ? distance * -1 : distance,
-  };
-  // @ts-ignore
-  const result = await prismaModel.findMany({
-    ...findManyArgs,
-    ...takeSkipArgs,
-  });
+  const { currentPage, size, totalPages } = pageInfo;
+  let cursorId: number;
+
+  // first
+  if (page === 1) {
+    let findManyArgsForFirst: FindManyArgs;
+    if (findManyArgs?.orderBy) {
+      const { orderBy } = findManyArgs;
+      findManyArgsForFirst = { ...findManyArgsForFirst, orderBy: { ...orderBy } };
+    }
+    if (findManyArgs?.where) {
+      const { where } = findManyArgs;
+      findManyArgsForFirst = { ...findManyArgsForFirst, where: { ...where } };
+    }
+    // @ts-ignore
+    const result = await prismaModel.findMany({
+      ...findManyArgsForFirst,
+      take: 1,
+    });
+    cursorId = result[0].id;
+
+    // console.log({page})
+    // console.log({findManyArgsForFirst})
+    // console.log({cursorId})
+
+  // last
+  } else if (page === totalPages) {
+    let findManyArgsForLast: FindManyArgs;
+    if (findManyArgs?.orderBy) {
+      const orderByKey = Object.keys(findManyArgs.orderBy)[0];
+      const orderDirection = findManyArgs.orderBy[orderByKey] === 'asc' ? 'desc' : 'asc';
+      findManyArgsForLast = {
+        ...findManyArgsForLast,
+        orderBy: {
+          [orderByKey]: orderDirection,
+        },
+      };
+    } else {
+      findManyArgsForLast = {
+        ...findManyArgsForLast,
+        orderBy: {
+          id: 'desc',
+        },
+      };
+    }
+    if (findManyArgs?.where) {
+      const { where } = findManyArgs;
+      findManyArgsForLast = { ...findManyArgsForLast, where: { ...where } };
+    }
+    // @ts-ignore
+    const result = await prismaModel.findMany({
+      ...findManyArgsForLast,
+      take: 1,
+    });
+    cursorId = result[0].id;
+
+    // console.log({page})
+    // console.log({findManyArgsForLast})
+    // console.log({cursorId})
+
+  // arounds & previous
+  } else {
+    const distance = (page - currentPage) * size;
+    const takeSkipArgs = {
+      take: distance < 0 ? -1 : 1,
+      skip: distance < 0 ? distance * -1 : distance,
+    };
+    // @ts-ignore
+    const result = await prismaModel.findMany({
+      ...findManyArgs,
+      ...takeSkipArgs,
+    });
+    cursorId = result[0].id;
+  }
+
   return {
-    cursor: Buffer.from('saltysalt'.concat(String(result[0].id))).toString('base64'),
+    cursor: Buffer.from('saltysalt'.concat(String(cursorId))).toString('base64'),
     page,
     isCurrent: currentPage === page,
   };
@@ -38,6 +103,7 @@ async function pageCursorsToArray<FindManyArgs, Delegate>(
   pageInfo: {
     currentPage: number,
     size: number,
+    totalPages: number,
   },
   prismaModel: Delegate,
   findManyArgs: FindManyArgs,
@@ -96,7 +162,7 @@ export async function createPageCursors<FindManyArgs, Delegate>({
 
   let pageCursors;
   const totalPages = computeTotalPages(totalRecords, size);
-  const pageInfo = { currentPage, size };
+  const pageInfo = { currentPage, size, totalPages };
 
   // Degenerate case of no records found. 1 / 1 / 1
   if (totalPages === 0) {
