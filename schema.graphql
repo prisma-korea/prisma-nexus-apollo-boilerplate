@@ -49,7 +49,8 @@ type pageCursorsConnection {
 
 type pageEdgesConnection {
   cursor: String!
-  node: Post!
+  post: Post
+  user: User
 }
 
 type paginationConnection {
