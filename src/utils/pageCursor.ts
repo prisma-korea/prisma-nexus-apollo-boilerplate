@@ -19,11 +19,15 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
   // first
   if (page === 1) {
     let findManyArgsForFirst: FindManyArgs;
+    // @ts-ignore
     if (findManyArgs?.orderBy) {
+      // @ts-ignore
       const { orderBy } = findManyArgs;
       findManyArgsForFirst = { ...findManyArgsForFirst, orderBy: { ...orderBy } };
     }
+    // @ts-ignore
     if (findManyArgs?.where) {
+      // @ts-ignore
       const { where } = findManyArgs;
       findManyArgsForFirst = { ...findManyArgsForFirst, where: { ...where } };
     }
@@ -34,15 +38,14 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
     });
     cursorId = result[0].id;
 
-    // console.log({page})
-    // console.log({findManyArgsForFirst})
-    // console.log({cursorId})
-
   // last
   } else if (page === totalPages) {
     let findManyArgsForLast: FindManyArgs;
+    // @ts-ignore
     if (findManyArgs?.orderBy) {
+      // @ts-ignore
       const orderByKey = Object.keys(findManyArgs.orderBy)[0];
+      // @ts-ignore
       const orderDirection = findManyArgs.orderBy[orderByKey] === 'asc' ? 'desc' : 'asc';
       findManyArgsForLast = {
         ...findManyArgsForLast,
@@ -58,7 +61,9 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
         },
       };
     }
+    // @ts-ignore
     if (findManyArgs?.where) {
+      // @ts-ignore
       const { where } = findManyArgs;
       findManyArgsForLast = { ...findManyArgsForLast, where: { ...where } };
     }
@@ -68,10 +73,6 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
       take: 1,
     });
     cursorId = result[0].id;
-
-    // console.log({page})
-    // console.log({findManyArgsForLast})
-    // console.log({cursorId})
 
   // arounds & previous
   } else {
