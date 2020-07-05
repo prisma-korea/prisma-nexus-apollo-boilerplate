@@ -1,7 +1,3 @@
-// In most cases Service caps the pagination results to 100 pages
-// and we may not want to return more than that
-const PAGE_NUMBER_CAP = 100;
-
 // Returns an opaque cursor for a page.
 async function pageToCursorObject<FindManyArgs, Delegate>(
   page: number,
@@ -125,7 +121,7 @@ async function pageCursorsToArray<FindManyArgs, Delegate>(
 
 // Returns the total number of pagination results capped to PAGE_NUMBER_CAP.
 export function computeTotalPages(totalCount:number, size: number): number {
-  return Math.min(Math.ceil(totalCount / size), PAGE_NUMBER_CAP);
+  return Math.ceil(totalCount / size);
 }
 
 interface pageCursor {
