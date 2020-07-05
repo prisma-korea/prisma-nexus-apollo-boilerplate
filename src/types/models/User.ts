@@ -85,6 +85,7 @@ export const User = objectType({
         }
 
         const result = createPageEdges<FindManyPostArgs, PostDelegate, PostWhereInput>({
+          modelType: 'post',
           currentPage,
           cursor,
           size,
@@ -93,7 +94,6 @@ export const User = objectType({
           // @ts-ignore -> TODO : Change orderDirection as unionType
           orderDirection,
           whereArgs,
-          prisma: ctx.prisma,
           prismaModel: ctx.prisma.post,
         });
         return result;

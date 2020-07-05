@@ -1,5 +1,4 @@
 import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './error';
-import { PrismaClient } from '@prisma/client';
 import { createPageCursors } from './pageCursor';
 
 interface pageEdgeType {
@@ -23,6 +22,7 @@ interface paginationType {
 }
 
 export async function createPageEdges<FindManyArgs, Delegate, WhereInput>({
+  modelType,
   currentPage,
   cursor,
   size,
@@ -30,9 +30,9 @@ export async function createPageEdges<FindManyArgs, Delegate, WhereInput>({
   orderBy,
   orderDirection,
   whereArgs,
-  prisma,
   prismaModel,
 }: {
+  modelType: string,
   currentPage: number,
   cursor: string,
   size: number,
@@ -40,24 +40,23 @@ export async function createPageEdges<FindManyArgs, Delegate, WhereInput>({
   orderBy: string,
   orderDirection: 'asc' | 'desc',
   whereArgs: WhereInput,
-  prisma: PrismaClient,
   prismaModel: Delegate,
 }): Promise<any> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
   }
 
-  // totalRecords
-  const postsAll = await prisma.post.findMany({
+  // totalCount
+  // @ts-ignore
+  const resultsForTotalCount = await prismaModel.findMany({
     where: {
       ...whereArgs,
     },
   });
-  const totalRecords = postsAll.length;
+  const totalCount = resultsForTotalCount.length;
 
   // findManyArgs
   let findManyArgs: FindManyArgs;
-
   if (whereArgs) {
     findManyArgs = { ...findManyArgs, where: { ...whereArgs } };
   }
@@ -68,36 +67,45 @@ export async function createPageEdges<FindManyArgs, Delegate, WhereInput>({
     findManyArgs = { ...findManyArgs, orderBy: { [orderBy]: orderDirection } };
   }
   if (cursor) {
-    const idOrigin = Number(
-      Buffer.from(cursor, 'base64').toString('ascii').slice(9),
-    );
+    const decryptedCursor = Buffer.from(cursor, 'base64').toString('ascii').slice(9);
+    let idOrigin: number | string;
+    if (isNaN(parseInt(decryptedCursor))) {
+      idOrigin = decryptedCursor;
+    } else {
+      idOrigin = Number(decryptedCursor);
+    }
     findManyArgs = { ...findManyArgs, cursor: { id: idOrigin } };
   } else {
-    const postsWithoutCursor = await prisma.post.findMany({
+    // @ts-ignore
+    const resultsForCursor = await prismaModel.findMany({
       ...findManyArgs,
+      take: 1,
     });
-    const id = postsWithoutCursor[0].id;
+    const id = resultsForCursor[0].id;
     currentPage = 1;
     findManyArgs = { ...findManyArgs, cursor: { id: id } };
   }
 
-  const posts = await prisma.post.findMany({
+  // @ts-ignore
+  const resultsForEdges = await prismaModel.findMany({
     ...findManyArgs,
   });
-  const pageEdges = posts.map((post) => ({
-    node: post,
-    cursor: Buffer.from('saltysalt'.concat(String(post.id))).toString('base64'),
+  const pageEdges = resultsForEdges.map((result) => ({
+    [modelType]: result,
+    cursor: Buffer.from('saltysalt'.concat(String(result.id))).toString('base64'),
   }));
+
   const pageCursors = createPageCursors<FindManyArgs, Delegate>({
     pageInfo: {
       currentPage,
       size,
       buttonNum,
     },
-    totalRecords,
+    totalCount,
     prismaModel,
     findManyArgs,
   });
+
   return {
     pageEdges,
     pageCursors,

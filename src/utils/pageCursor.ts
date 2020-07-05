@@ -14,7 +14,7 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
   findManyArgs: FindManyArgs,
 ) {
   const { currentPage, size, totalPages } = pageInfo;
-  let cursorId: number;
+  let cursorId: number | string;
 
   // first
   if (page === 1) {
@@ -123,8 +123,8 @@ async function pageCursorsToArray<FindManyArgs, Delegate>(
 }
 
 // Returns the total number of pagination results capped to PAGE_NUMBER_CAP.
-export function computeTotalPages(totalRecords:number, size: number): number {
-  return Math.min(Math.ceil(totalRecords / size), PAGE_NUMBER_CAP);
+export function computeTotalPages(totalCount:number, size: number): number {
+  return Math.min(Math.ceil(totalCount / size), PAGE_NUMBER_CAP);
 }
 
 interface pageCursor {
@@ -141,7 +141,7 @@ interface pageCursors {
 
 export async function createPageCursors<FindManyArgs, Delegate>({
   pageInfo: { currentPage, size, buttonNum },
-  totalRecords,
+  totalCount,
   prismaModel,
   findManyArgs,
 }: {
@@ -150,7 +150,7 @@ export async function createPageCursors<FindManyArgs, Delegate>({
     size: number,
     buttonNum: number,
   },
-  totalRecords: number,
+  totalCount: number,
   prismaModel: Delegate,
   findManyArgs: FindManyArgs,
 }): Promise<pageCursors> {
@@ -161,7 +161,7 @@ export async function createPageCursors<FindManyArgs, Delegate>({
   }
 
   let pageCursors;
-  const totalPages = computeTotalPages(totalRecords, size);
+  const totalPages = computeTotalPages(totalCount, size);
   const pageInfo = { currentPage, size, totalPages };
 
   // Degenerate case of no records found. 1 / 1 / 1
