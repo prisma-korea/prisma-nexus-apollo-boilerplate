@@ -13,22 +13,26 @@ export const Profile = objectType({
   },
 });
 
-interface pageEdgeType {
+interface PageEdgeType {
   cursor: string,
-  node: typeof Post,
+  /* eslint-disable */
+  // node: Object,
+  post: typeof Post,
+  user: Object,
+  /* eslint-enable */
 }
-interface pageCursorType {
+interface PageCursorType {
   cursor: string,
   page: number,
   isCurrent: boolean,
 }
-interface paginationConnectionType {
-  pageEdges: [pageEdgeType],
+interface PaginationType {
+  pageEdges: [PageEdgeType],
   pageCursors: {
-    previous: pageCursorType,
-    first: pageCursorType,
-    arounds: [pageCursorType],
-    last: pageCursorType,
+    previous: PageCursorType,
+    first: PageCursorType,
+    arounds: [PageCursorType],
+    last: PageCursorType,
   }
 }
 
@@ -70,7 +74,7 @@ export const User = objectType({
         orderBy,
         orderDirection,
         where,
-      }, ctx):Promise<any> {
+      }, ctx):Promise<PaginationType> {
         const userId = getUserId(ctx);
 
         let whereArgs: PostWhereInput = {
@@ -83,7 +87,7 @@ export const User = objectType({
           whereArgs = { ...whereArgs, ...whereParsed };
         }
 
-        const result = createPageEdges<FindManyPostArgs, PostDelegate, PostWhereInput>({
+        const result = createPageEdges<PaginationType, FindManyPostArgs, PostDelegate, PostWhereInput>({
           modelType: 'post',
           currentPage,
           cursor,

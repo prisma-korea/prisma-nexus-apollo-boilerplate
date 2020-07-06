@@ -1,30 +1,30 @@
 import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './pageError';
 import { createPageCursors } from './pageCursor';
 
-interface pageEdgeType {
+interface PageEdgeType {
   cursor: string,
   /* eslint-disable */
-  user: Object,
+  // node: Object,
   post: Object,
-  node: Object,
+  user: Object,
   /* eslint-enable */
 }
-interface pageCursorType {
+interface PageCursorType {
   cursor: string,
   page: number,
   isCurrent: boolean,
 }
-interface paginationType {
-  pageEdges: [pageEdgeType],
+interface PaginationType2 {
+  pageEdges: [PageEdgeType],
   pageCursors: {
-    previous: pageCursorType,
-    first: pageCursorType,
-    arounds: [pageCursorType],
-    last: pageCursorType,
+    previous: PageCursorType,
+    first: PageCursorType,
+    arounds: [PageCursorType],
+    last: PageCursorType,
   }
 }
 
-export async function createPageEdges<FindManyArgs, Delegate, WhereInput>({
+export async function createPageEdges<PaginationType, FindManyArgs, Delegate, WhereInput>({
   modelType,
   currentPage,
   cursor,
@@ -44,7 +44,7 @@ export async function createPageEdges<FindManyArgs, Delegate, WhereInput>({
   orderDirection: 'asc' | 'desc',
   whereArgs: WhereInput,
   prismaModel: Delegate,
-}): Promise<any> {
+}): Promise<PaginationType2> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
   }
