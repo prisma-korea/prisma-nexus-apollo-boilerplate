@@ -31,25 +31,6 @@ const pageCursorsConnection = objectType({
   },
 });
 
-// const ModelType = enumType({
-//   name: 'ModelType',
-//   // members: {
-//   //   Post: typeof Post,
-//   //   User: typeof User,
-//   // },
-//   members: [Post],
-//   description: 'The first Star Wars episodes released',
-// });
-
-// const ModelType = unionType({
-//   name: 'ModelType',
-//   description: 'Any container type that can be rendered into the feed',
-//   definition(t) {
-//     t.members('Post', 'User');
-//     // t.resolveType((item) => item);
-//   },
-// });
-
 const pageEdgesConnection = objectType({
   name: 'pageEdgesConnection',
   definition(t) {

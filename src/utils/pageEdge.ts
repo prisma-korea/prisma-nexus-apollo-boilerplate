@@ -3,8 +3,11 @@ import { createPageCursors } from './pageCursor';
 
 interface pageEdgeType {
   cursor: string,
-  // eslint-disable-next-line
+  /* eslint-disable */
+  user: Object,
+  post: Object,
   node: Object,
+  /* eslint-enable */
 }
 interface pageCursorType {
   cursor: string,
