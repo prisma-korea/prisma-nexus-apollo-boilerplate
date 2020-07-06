@@ -1,6 +1,7 @@
 import { FindManyPostArgs, PostDelegate, PostWhereInput } from '@prisma/client';
 import { createPageEdges, paginationConnection } from '../../utils/paginator';
 import { intArg, objectType, stringArg } from '@nexus/schema';
+
 import { Post } from './Post';
 import { getUserId } from '../../utils';
 

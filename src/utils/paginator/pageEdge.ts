@@ -24,6 +24,19 @@ interface PaginationType2 {
   }
 }
 
+interface Props<Data> {
+  modelType: string,
+  currentPage: number,
+  cursor: Props<Data>,
+  data: Data,
+  size: number,
+  buttonNum: number,
+  orderBy: string,
+  orderDirection: 'asc' | 'desc',
+  whereArgs: WhereInput,
+  prismaModel: Delegate,
+}
+
 export async function createPageEdges<PaginationType, FindManyArgs, Delegate, WhereInput>({
   modelType,
   currentPage,
@@ -34,17 +47,7 @@ export async function createPageEdges<PaginationType, FindManyArgs, Delegate, Wh
   orderDirection,
   whereArgs,
   prismaModel,
-}: {
-  modelType: string,
-  currentPage: number,
-  cursor: string,
-  size: number,
-  buttonNum: number,
-  orderBy: string,
-  orderDirection: 'asc' | 'desc',
-  whereArgs: WhereInput,
-  prismaModel: Delegate,
-}): Promise<PaginationType2> {
+}: Props): Promise<PaginationType2> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
   }
@@ -97,7 +100,7 @@ export async function createPageEdges<PaginationType, FindManyArgs, Delegate, Wh
     cursor: Buffer.from('saltysalt'.concat(String(result.id))).toString('base64'),
   }));
 
-  const pageCursors = createPageCursors<FindManyArgs, Delegate>({
+  const pageCursors = await createPageCursors<FindManyArgs, Delegate>({
     pageInfo: {
       currentPage,
       size,
@@ -107,6 +110,18 @@ export async function createPageEdges<PaginationType, FindManyArgs, Delegate, Wh
     prismaModel,
     findManyArgs,
   });
+
+  pageCursors.previous = {
+    cursor: '12',
+    page: 1,
+    isCurrent: true,
+  };
+
+  pageCursors.last = {
+    cursor: '12',
+    page: 1,
+    isCurrent: true,
+  };
 
   return {
     pageEdges,

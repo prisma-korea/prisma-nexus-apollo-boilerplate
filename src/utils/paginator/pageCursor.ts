@@ -125,15 +125,16 @@ export function computeTotalPages(totalCount:number, size: number): number {
 }
 
 interface pageCursor {
-  cursor: number,
+  cursor: string,
   page: number,
   isCurrent: boolean,
 }
 
 interface pageCursors {
   first: pageCursor,
-  around: [pageCursor],
+  arounds: [pageCursor],
   last: pageCursor,
+  previous: pageCursor
 }
 
 export async function createPageCursors<FindManyArgs, Delegate>({
@@ -169,13 +170,17 @@ export async function createPageCursors<FindManyArgs, Delegate>({
     };
   } else if (totalPages <= buttonNum) {
     // Collection is short, and `around` includes page 1 and the last page. 1 / 1 2 3 / 7
-    const around = await pageCursorsToArray<FindManyArgs, Delegate>(1, totalPages, pageInfo, prismaModel, findManyArgs);
+    const around = await pageCursorsToArray<FindManyArgs, Delegate>(
+      1, totalPages, pageInfo, prismaModel, findManyArgs,
+    );
     pageCursors = {
       around,
     };
   } else if (currentPage <= Math.floor(buttonNum / 2) + 1) {
     // We are near the beginning, and `around` will include page 1. 1 / 1 2 3 / 7
-    const last = await pageToCursorObject<FindManyArgs, Delegate>(totalPages, pageInfo, prismaModel, findManyArgs);
+    const last = await pageToCursorObject<FindManyArgs, Delegate>(
+      totalPages, pageInfo, prismaModel, findManyArgs,
+    );
     const around = await pageCursorsToArray<FindManyArgs, Delegate>(
       1,
       buttonNum - 1,
@@ -189,7 +194,9 @@ export async function createPageCursors<FindManyArgs, Delegate>({
     };
   } else if (currentPage >= totalPages - Math.floor(buttonNum / 2)) {
     // We are near the end, and `around` will include the last page. 1 / 5 6 7 / 7
-    const first = await pageToCursorObject<FindManyArgs, Delegate>(1, pageInfo, prismaModel, findManyArgs);
+    const first = await pageToCursorObject<FindManyArgs, Delegate>(
+      1, pageInfo, prismaModel, findManyArgs,
+    );
     const around = await pageCursorsToArray<FindManyArgs, Delegate>(
       totalPages - buttonNum + 2,
       totalPages,
@@ -203,8 +210,12 @@ export async function createPageCursors<FindManyArgs, Delegate>({
     };
   } else {
     // We are in the middle, and `around` doesn't include the first or last page. 1 / 4 5 6 / 7
-    const first = await pageToCursorObject<FindManyArgs, Delegate>(1, pageInfo, prismaModel, findManyArgs);
-    const last = await pageToCursorObject<FindManyArgs, Delegate>(totalPages, pageInfo, prismaModel, findManyArgs);
+    const first = await pageToCursorObject<FindManyArgs, Delegate>(
+      1, pageInfo, prismaModel, findManyArgs,
+    );
+    const last = await pageToCursorObject<FindManyArgs, Delegate>(
+      totalPages, pageInfo, prismaModel, findManyArgs,
+    );
     const offset = Math.floor((buttonNum - 3) / 2);
     const around = await pageCursorsToArray<FindManyArgs, Delegate>(
       currentPage - offset,
