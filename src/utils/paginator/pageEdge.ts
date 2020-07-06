@@ -1,4 +1,4 @@
-import { ErrorCursorOrCurrentPageArgNotGivenTogether } from '../error';
+import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './pageError';
 import { createPageCursors } from './pageCursor';
 
 interface pageEdgeType {

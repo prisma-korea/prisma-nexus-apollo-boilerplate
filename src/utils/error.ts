@@ -43,7 +43,3 @@ export const ErrorUrlNotValid =
 
 export const ErrorFirstLastNotSupported =
   (): AuthenticationError => new AuthenticationError(ErrorString.FirstLastNotSupported);
-
-export const ErrorCursorOrCurrentPageArgNotGivenTogether =
-  (): Error =>
-    new Error(ErrorString.CursorOrCurrentPageArgNotGivenTogether);
