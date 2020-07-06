@@ -1,4 +1,4 @@
-import { Post, User } from '../types/models';
+import { Post, User } from '../../types/models';
 import { objectType } from '@nexus/schema';
 
 const cursorConnection = objectType({

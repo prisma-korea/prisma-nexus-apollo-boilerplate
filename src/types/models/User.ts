@@ -1,9 +1,8 @@
 import { FindManyPostArgs, PostDelegate, PostWhereInput } from '@prisma/client';
+import { createPageEdges, paginationConnection } from '../../utils/paginator';
 import { intArg, objectType, stringArg } from '@nexus/schema';
 import { Post } from './Post';
-import { createPageEdges } from '../../utils/pageEdge';
 import { getUserId } from '../../utils';
-import { paginationConnection } from '../../utils/pageConnection';
 
 export const Profile = objectType({
   name: 'Profile',

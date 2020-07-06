@@ -1,8 +1,7 @@
 import { FindManyUserArgs, UserDelegate, UserWhereInput } from '@prisma/client';
+import { createPageEdges, paginationConnection } from '../../../utils/paginator';
 import { intArg, queryField, stringArg } from '@nexus/schema';
-import { createPageEdges } from '../../../utils/pageEdge';
 import { getUserId } from '../../../utils';
-import { paginationConnection } from '../../../utils/pageConnection';
 
 export const me = queryField('me', {
   type: 'User',
