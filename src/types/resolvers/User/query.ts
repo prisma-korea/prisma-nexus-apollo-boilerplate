@@ -1,7 +1,9 @@
 import { FindManyUserArgs, UserDelegate, UserWhereInput } from '@prisma/client';
-import { createPageEdges, paginationConnection } from '../../../utils/paginator';
 import { intArg, queryField, stringArg } from '@nexus/schema';
+import { User } from '../../models';
+import { createPageEdges } from '../../../utils/paginator';
 import { getUserId } from '../../../utils';
+import { paginationUserConnection as paginationConnection } from '../../../utils/connection';
 
 export const me = queryField('me', {
   type: 'User',
@@ -15,6 +17,25 @@ export const me = queryField('me', {
     });
   },
 });
+
+interface PageEdgeType {
+  cursor: string,
+  node: typeof User,
+}
+interface PageCursorType {
+  cursor: string,
+  page: number,
+  isCurrent: boolean,
+}
+interface PaginationType {
+  pageEdges: [PageEdgeType],
+  pageCursors: {
+    previous: PageCursorType,
+    first: PageCursorType,
+    arounds: [PageCursorType],
+    last: PageCursorType,
+  }
+}
 
 export const users = queryField('users', {
   type: paginationConnection,
@@ -38,15 +59,15 @@ export const users = queryField('users', {
     orderBy,
     orderDirection,
     where,
-  }, ctx):Promise<any> {
+  }, ctx):Promise<PaginationType> {
     let whereArgs: UserWhereInput = {};
     if (where) {
       const whereParsed = JSON.parse(where.replace(/'/g, '"'));
       whereArgs = { ...whereArgs, ...whereParsed };
     }
 
-    const result = createPageEdges<FindManyUserArgs, UserDelegate, UserWhereInput>({
-      modelType: 'user',
+    const result = createPageEdges<FindManyUserArgs, UserWhereInput, UserDelegate>({
+      model: User,
       currentPage,
       cursor,
       size,

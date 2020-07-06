@@ -1,5 +1,6 @@
 enum ErrorString {
-  CursorOrCurrentPageArgNotGivenTogether = 'Cursor and CurrentPage argument should be given together.',
+  CursorOrCurrentPageArgNotGivenTogether =
+  'Cursor and CurrentPage argument should be given together.',
 }
 
 export const ErrorCursorOrCurrentPageArgNotGivenTogether =

@@ -1,21 +1,18 @@
 import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './pageError';
+import { User } from '../../types/models';
 import { createPageCursors } from './pageCursor';
 
-interface PageEdgeType {
+interface PageEdgeType<T> {
   cursor: string,
-  /* eslint-disable */
-  // node: Object,
-  post: Object,
-  user: Object,
-  /* eslint-enable */
+  node: T,
 }
 interface PageCursorType {
   cursor: string,
   page: number,
   isCurrent: boolean,
 }
-interface PaginationType2 {
-  pageEdges: [PageEdgeType],
+interface PaginationType<T> {
+  pageEdges: [PageEdgeType<T>],
   pageCursors: {
     previous: PageCursorType,
     first: PageCursorType,
@@ -24,21 +21,20 @@ interface PaginationType2 {
   }
 }
 
-interface Props<Data> {
-  modelType: string,
+interface Props<T, K> {
+  model: any,
   currentPage: number,
-  cursor: Props<Data>,
-  data: Data,
+  cursor: string,
   size: number,
   buttonNum: number,
   orderBy: string,
   orderDirection: 'asc' | 'desc',
-  whereArgs: WhereInput,
-  prismaModel: Delegate,
+  whereArgs: T,
+  prismaModel: K,
 }
 
-export async function createPageEdges<PaginationType, FindManyArgs, Delegate, WhereInput>({
-  modelType,
+export async function createPageEdges<FindManyArgs, WhereInput, Delegate>({
+  model,
   currentPage,
   cursor,
   size,
@@ -47,7 +43,7 @@ export async function createPageEdges<PaginationType, FindManyArgs, Delegate, Wh
   orderDirection,
   whereArgs,
   prismaModel,
-}: Props): Promise<PaginationType2> {
+}: Props<WhereInput, Delegate>): Promise<PaginationType<typeof model>> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
   }
@@ -96,8 +92,8 @@ export async function createPageEdges<PaginationType, FindManyArgs, Delegate, Wh
     ...findManyArgs,
   });
   const pageEdges = resultsForEdges.map((result) => ({
-    [modelType]: result,
     cursor: Buffer.from('saltysalt'.concat(String(result.id))).toString('base64'),
+    node: result,
   }));
 
   const pageCursors = await createPageCursors<FindManyArgs, Delegate>({
@@ -110,18 +106,6 @@ export async function createPageEdges<PaginationType, FindManyArgs, Delegate, Wh
     prismaModel,
     findManyArgs,
   });
-
-  pageCursors.previous = {
-    cursor: '12',
-    page: 1,
-    isCurrent: true,
-  };
-
-  pageCursors.last = {
-    cursor: '12',
-    page: 1,
-    isCurrent: true,
-  };
 
   return {
     pageEdges,

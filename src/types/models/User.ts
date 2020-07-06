@@ -1,9 +1,9 @@
 import { FindManyPostArgs, PostDelegate, PostWhereInput } from '@prisma/client';
-import { createPageEdges, paginationConnection } from '../../utils/paginator';
 import { intArg, objectType, stringArg } from '@nexus/schema';
-
 import { Post } from './Post';
+import { createPageEdges } from '../../utils/paginator';
 import { getUserId } from '../../utils';
+import { paginationPostConnection as paginationConnection } from '../../utils/connection';
 
 export const Profile = objectType({
   name: 'Profile',
@@ -16,11 +16,7 @@ export const Profile = objectType({
 
 interface PageEdgeType {
   cursor: string,
-  /* eslint-disable */
-  // node: Object,
-  post: typeof Post,
-  user: Object,
-  /* eslint-enable */
+  node: typeof Post,
 }
 interface PageCursorType {
   cursor: string,
@@ -67,7 +63,7 @@ export const User = objectType({
         }),
         where: stringArg(),
       },
-      resolve(_parent, {
+      async resolve(_parent, {
         currentPage,
         cursor,
         size,
@@ -88,8 +84,8 @@ export const User = objectType({
           whereArgs = { ...whereArgs, ...whereParsed };
         }
 
-        const result = createPageEdges<PaginationType, FindManyPostArgs, PostDelegate, PostWhereInput>({
-          modelType: 'post',
+        const result = await createPageEdges<FindManyPostArgs, PostWhereInput, PostDelegate>({
+          model: Post,
           currentPage,
           cursor,
           size,

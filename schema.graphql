@@ -14,7 +14,13 @@ enum AuthType {
   Google
 }
 
-type cursorConnection {
+type cursorPostConnection {
+  cursor: String!
+  isCurrent: Boolean!
+  page: Int!
+}
+
+type cursorUserConnection {
   cursor: String!
   isCurrent: Boolean!
   page: Int!
@@ -40,22 +46,38 @@ type Mutation {
   updateProfile(user: UserUpdateInput): User!
 }
 
-type pageCursorsConnection {
-  around: [cursorConnection!]
-  first: cursorConnection
-  last: cursorConnection
-  previous: cursorConnection
+type pageCursorsPostConnection {
+  around: [cursorPostConnection!]
+  first: cursorPostConnection
+  last: cursorPostConnection
+  previous: cursorPostConnection
 }
 
-type pageEdgesConnection {
+type pageCursorsUserConnection {
+  around: [cursorUserConnection!]
+  first: cursorUserConnection
+  last: cursorUserConnection
+  previous: cursorUserConnection
+}
+
+type pageEdgesPostConnection {
   cursor: String!
-  post: Post
-  user: User
+  node: Post
 }
 
-type paginationConnection {
-  pageCursors: pageCursorsConnection
-  pageEdges: [pageEdgesConnection!]
+type pageEdgesUserConnection {
+  cursor: String!
+  node: User
+}
+
+type paginationPostConnection {
+  pageCursors: pageCursorsPostConnection
+  pageEdges: [pageEdgesPostConnection!]
+}
+
+type paginationUserConnection {
+  pageCursors: pageCursorsUserConnection
+  pageEdges: [pageEdgesUserConnection!]
 }
 
 type Post {
@@ -80,7 +102,7 @@ type Query {
   filterPosts(searchString: String): [Post!]!
   me: User
   post(id: Int): Post
-  users(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, where: String): paginationConnection
+  users(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, where: String): paginationUserConnection
 }
 
 type Subscription {
@@ -102,7 +124,7 @@ type User {
   nickname: String
   phone: String
   photoURL: String
-  posts(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, where: String): paginationConnection!
+  posts(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, where: String): paginationPostConnection!
   profile: Profile
   thumbURL: String
   updatedAt: DateTime
