@@ -1,5 +1,5 @@
 import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './pageError';
-import { User } from '../../types/models';
+import { PrismaClient } from '@prisma/client';
 import { createPageCursors } from './pageCursor';
 
 interface PageEdgeType<T> {
@@ -16,13 +16,13 @@ interface PaginationType<T> {
   pageCursors: {
     previous: PageCursorType,
     first: PageCursorType,
-    arounds: [PageCursorType],
+    around: [PageCursorType],
     last: PageCursorType,
   }
 }
 
 interface Props<T, K> {
-  model: any,
+  model: K,
   currentPage: number,
   cursor: string,
   size: number,
@@ -30,10 +30,9 @@ interface Props<T, K> {
   orderBy: string,
   orderDirection: 'asc' | 'desc',
   whereArgs: T,
-  prismaModel: K,
 }
 
-export async function createPageEdges<FindManyArgs, WhereInput, Delegate>({
+export async function createPageEdges<FindManyArgs, WhereInput>({
   model,
   currentPage,
   cursor,
@@ -42,14 +41,14 @@ export async function createPageEdges<FindManyArgs, WhereInput, Delegate>({
   orderBy,
   orderDirection,
   whereArgs,
-  prismaModel,
-}: Props<WhereInput, Delegate>): Promise<PaginationType<typeof model>> {
+}: Props<WhereInput, typeof model>): Promise<PaginationType<typeof model>> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
   }
 
   // totalCount
-  // @ts-ignore
+  const prisma = new PrismaClient();
+  const prismaModel = prisma[model.name.toLowerCase()];
   const totalCount = await prismaModel.count({
     where: {
       ...whereArgs,
@@ -77,7 +76,6 @@ export async function createPageEdges<FindManyArgs, WhereInput, Delegate>({
     }
     findManyArgs = { ...findManyArgs, cursor: { id: idOrigin } };
   } else {
-    // @ts-ignore
     const resultsForCursor = await prismaModel.findMany({
       ...findManyArgs,
       take: 1,
@@ -87,7 +85,6 @@ export async function createPageEdges<FindManyArgs, WhereInput, Delegate>({
     findManyArgs = { ...findManyArgs, cursor: { id: id } };
   }
 
-  // @ts-ignore
   const resultsForEdges = await prismaModel.findMany({
     ...findManyArgs,
   });
@@ -96,15 +93,15 @@ export async function createPageEdges<FindManyArgs, WhereInput, Delegate>({
     node: result,
   }));
 
-  const pageCursors = await createPageCursors<FindManyArgs, Delegate>({
+  const pageCursors = await createPageCursors<FindManyArgs>({
     pageInfo: {
       currentPage,
       size,
       buttonNum,
     },
-    totalCount,
-    prismaModel,
+    model,
     findManyArgs,
+    totalCount,
   });
 
   return {

@@ -1,4 +1,4 @@
-import { FindManyUserArgs, UserDelegate, UserWhereInput } from '@prisma/client';
+import { FindManyUserArgs, UserWhereInput } from '@prisma/client';
 import { intArg, queryField, stringArg } from '@nexus/schema';
 import { User } from '../../models';
 import { createPageEdges } from '../../../utils/paginator';
@@ -32,7 +32,7 @@ interface PaginationType {
   pageCursors: {
     previous: PageCursorType,
     first: PageCursorType,
-    arounds: [PageCursorType],
+    around: [PageCursorType],
     last: PageCursorType,
   }
 }
@@ -66,7 +66,7 @@ export const users = queryField('users', {
       whereArgs = { ...whereArgs, ...whereParsed };
     }
 
-    const result = createPageEdges<FindManyUserArgs, UserWhereInput, UserDelegate>({
+    const result = createPageEdges<FindManyUserArgs, UserWhereInput>({
       model: User,
       currentPage,
       cursor,
@@ -76,7 +76,6 @@ export const users = queryField('users', {
       // @ts-ignore -> TODO : Change orderDirection as unionType
       orderDirection,
       whereArgs,
-      prismaModel: ctx.prisma.user,
     });
     return result;
   },

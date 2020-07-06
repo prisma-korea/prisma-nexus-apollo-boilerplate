@@ -1,4 +1,4 @@
-import { FindManyPostArgs, PostDelegate, PostWhereInput } from '@prisma/client';
+import { FindManyPostArgs, PostWhereInput } from '@prisma/client';
 import { intArg, objectType, stringArg } from '@nexus/schema';
 import { Post } from './Post';
 import { createPageEdges } from '../../utils/paginator';
@@ -28,7 +28,7 @@ interface PaginationType {
   pageCursors: {
     previous: PageCursorType,
     first: PageCursorType,
-    arounds: [PageCursorType],
+    around: [PageCursorType],
     last: PageCursorType,
   }
 }
@@ -84,7 +84,7 @@ export const User = objectType({
           whereArgs = { ...whereArgs, ...whereParsed };
         }
 
-        const result = await createPageEdges<FindManyPostArgs, PostWhereInput, PostDelegate>({
+        const result = await createPageEdges<FindManyPostArgs, PostWhereInput>({
           model: Post,
           currentPage,
           cursor,
@@ -94,7 +94,6 @@ export const User = objectType({
           // @ts-ignore -> TODO : Change orderDirection as unionType
           orderDirection,
           whereArgs,
-          prismaModel: ctx.prisma.post,
         });
         return result;
       },

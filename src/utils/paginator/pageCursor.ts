@@ -1,16 +1,27 @@
-// Returns an opaque cursor for a page.
-async function pageToCursorObject<FindManyArgs, Delegate>(
+import { PrismaClient } from '@prisma/client';
+
+interface Props3<T, K> {
   page: number,
   pageInfo: {
-     currentPage: number,
-     size: number,
-     totalPages: number,
+    currentPage: number,
+    size: number,
+    totalPages: number,
   },
-  prismaModel: Delegate,
-  findManyArgs: FindManyArgs,
-) {
+  model: K,
+  findManyArgs: T,
+}
+
+// Returns an opaque cursor for a page.
+async function pageToCursorObject<FindManyArgs>({
+  page,
+  pageInfo,
+  model,
+  findManyArgs,
+}: Props3<FindManyArgs, typeof model>) {
   const { currentPage, size, totalPages } = pageInfo;
   let cursorId: number | string;
+  const prisma = new PrismaClient();
+  const prismaModel = prisma[model.name.toLowerCase()];
 
   // first
   if (page === 1) {
@@ -27,7 +38,6 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
       const { where } = findManyArgs;
       findManyArgsForFirst = { ...findManyArgsForFirst, where: { ...where } };
     }
-    // @ts-ignore
     const result = await prismaModel.findMany({
       ...findManyArgsForFirst,
       take: 1,
@@ -63,21 +73,19 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
       const { where } = findManyArgs;
       findManyArgsForLast = { ...findManyArgsForLast, where: { ...where } };
     }
-    // @ts-ignore
     const result = await prismaModel.findMany({
       ...findManyArgsForLast,
       take: 1,
     });
     cursorId = result[0].id;
 
-  // arounds & previous
+  // around & previous
   } else {
     const distance = (page - currentPage) * size;
     const takeSkipArgs = {
       take: distance < 0 ? -1 : 1,
       skip: distance < 0 ? distance * -1 : distance,
     };
-    // @ts-ignore
     const result = await prismaModel.findMany({
       ...findManyArgs,
       ...takeSkipArgs,
@@ -92,9 +100,7 @@ async function pageToCursorObject<FindManyArgs, Delegate>(
   };
 }
 
-// Returns an array of PageCursor objects
-// from start to end (page numbers).
-async function pageCursorsToArray<FindManyArgs, Delegate>(
+interface Props2<T, K> {
   start: number,
   end: number,
   pageInfo: {
@@ -102,18 +108,28 @@ async function pageCursorsToArray<FindManyArgs, Delegate>(
     size: number,
     totalPages: number,
   },
-  prismaModel: Delegate,
-  findManyArgs: FindManyArgs,
-) {
+  model: K,
+  findManyArgs: T,
+}
+
+// Returns an array of PageCursor objects
+// from start to end (page numbers).
+async function pageCursorsToArray<FindManyArgs>({
+  start,
+  end,
+  pageInfo,
+  model,
+  findManyArgs,
+}: Props2<FindManyArgs, typeof model>) {
   let page;
   const cursors = [];
   for (page = start; page <= end; page++) {
-    const cursorResult = await pageToCursorObject<FindManyArgs, Delegate>(
+    const cursorResult = await pageToCursorObject<FindManyArgs>({
       page,
       pageInfo,
-      prismaModel,
+      model,
       findManyArgs,
-    );
+    });
     cursors.push(cursorResult);
   }
   return cursors;
@@ -132,26 +148,28 @@ interface pageCursor {
 
 interface pageCursors {
   first: pageCursor,
-  arounds: [pageCursor],
+  around: [pageCursor],
   last: pageCursor,
   previous: pageCursor
 }
 
-export async function createPageCursors<FindManyArgs, Delegate>({
-  pageInfo: { currentPage, size, buttonNum },
-  totalCount,
-  prismaModel,
-  findManyArgs,
-}: {
+interface Props<T, K> {
   pageInfo: {
     currentPage: number,
     size: number,
     buttonNum: number,
   },
+  model: K,
   totalCount: number,
-  prismaModel: Delegate,
-  findManyArgs: FindManyArgs,
-}): Promise<pageCursors> {
+  findManyArgs: T,
+}
+
+export async function createPageCursors<FindManyArgs>({
+  pageInfo: { currentPage, size, buttonNum },
+  model,
+  findManyArgs,
+  totalCount,
+}: Props<FindManyArgs, typeof model>): Promise<pageCursors> {
   // If buttonNum is even, bump it up by 1, and log out a warning.
   if (buttonNum % 2 === 0) {
     console.log(`Max of ${buttonNum} passed to page cursors, using ${buttonNum + 1}`);
@@ -164,66 +182,84 @@ export async function createPageCursors<FindManyArgs, Delegate>({
 
   // Degenerate case of no records found. 1 / 1 / 1
   if (totalPages === 0) {
-    // pageCursors = { around: [pageToCursorObject<T, K>(1, 1, size, prismaModel, where)] };
+    // pageCursors = {
+    //   around: [pageToCursorObject<FindManyArgs>(1, 1, pageInfo, model, findManyArgs)],
+    // }
     pageCursors = {
       around: [],
     };
   } else if (totalPages <= buttonNum) {
     // Collection is short, and `around` includes page 1 and the last page. 1 / 1 2 3 / 7
-    const around = await pageCursorsToArray<FindManyArgs, Delegate>(
-      1, totalPages, pageInfo, prismaModel, findManyArgs,
-    );
+    const around = await pageCursorsToArray<FindManyArgs>({
+      start: 1,
+      end: totalPages,
+      pageInfo,
+      model,
+      findManyArgs,
+    });
     pageCursors = {
       around,
     };
   } else if (currentPage <= Math.floor(buttonNum / 2) + 1) {
     // We are near the beginning, and `around` will include page 1. 1 / 1 2 3 / 7
-    const last = await pageToCursorObject<FindManyArgs, Delegate>(
-      totalPages, pageInfo, prismaModel, findManyArgs,
-    );
-    const around = await pageCursorsToArray<FindManyArgs, Delegate>(
-      1,
-      buttonNum - 1,
+    const last = await pageToCursorObject<FindManyArgs>({
+      page: totalPages,
       pageInfo,
-      prismaModel,
+      model,
       findManyArgs,
-    );
+    });
+    const around = await pageCursorsToArray<FindManyArgs>({
+      start: 1,
+      end: buttonNum - 1,
+      pageInfo,
+      model,
+      findManyArgs,
+    });
     pageCursors = {
       last,
       around,
     };
   } else if (currentPage >= totalPages - Math.floor(buttonNum / 2)) {
     // We are near the end, and `around` will include the last page. 1 / 5 6 7 / 7
-    const first = await pageToCursorObject<FindManyArgs, Delegate>(
-      1, pageInfo, prismaModel, findManyArgs,
-    );
-    const around = await pageCursorsToArray<FindManyArgs, Delegate>(
-      totalPages - buttonNum + 2,
-      totalPages,
+    const first = await pageToCursorObject<FindManyArgs>({
+      page: 1,
       pageInfo,
-      prismaModel,
+      model,
       findManyArgs,
-    );
+    });
+    const around = await pageCursorsToArray<FindManyArgs>({
+      start: totalPages - buttonNum + 2,
+      end: totalPages,
+      pageInfo,
+      model,
+      findManyArgs,
+    });
     pageCursors = {
       first,
       around,
     };
   } else {
     // We are in the middle, and `around` doesn't include the first or last page. 1 / 4 5 6 / 7
-    const first = await pageToCursorObject<FindManyArgs, Delegate>(
-      1, pageInfo, prismaModel, findManyArgs,
-    );
-    const last = await pageToCursorObject<FindManyArgs, Delegate>(
-      totalPages, pageInfo, prismaModel, findManyArgs,
-    );
-    const offset = Math.floor((buttonNum - 3) / 2);
-    const around = await pageCursorsToArray<FindManyArgs, Delegate>(
-      currentPage - offset,
-      currentPage + offset,
+    const first = await pageToCursorObject<FindManyArgs>({
+      page: 1,
       pageInfo,
-      prismaModel,
+      model,
       findManyArgs,
-    );
+    });
+    const last = await pageToCursorObject<FindManyArgs>({
+      page: totalPages,
+      pageInfo,
+      model,
+      findManyArgs,
+    });
+    const offset = Math.floor((buttonNum - 3) / 2);
+    const around = await pageCursorsToArray<FindManyArgs>({
+      start: currentPage - offset,
+      end: currentPage + offset,
+      pageInfo,
+      model,
+      findManyArgs,
+    });
     pageCursors = {
       first,
       around,
@@ -231,12 +267,12 @@ export async function createPageCursors<FindManyArgs, Delegate>({
     };
   }
   if (currentPage > 1 && totalPages > 1) {
-    const previous = await pageToCursorObject<FindManyArgs, Delegate>(
-      currentPage - 1,
+    const previous = await pageToCursorObject<FindManyArgs>({
+      page: currentPage - 1,
       pageInfo,
-      prismaModel,
+      model,
       findManyArgs,
-    );
+    });
     pageCursors.previous = previous;
   }
   return pageCursors;
