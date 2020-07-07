@@ -1,7 +1,6 @@
 import { PaginationType, cursorBasedOffsetPaginator } from '../../../utils/paginator';
 import { intArg, queryField, stringArg } from '@nexus/schema';
 import { User } from '../../models';
-import { UserWhereInput } from '@prisma/client';
 import { getUserId } from '../../../utils';
 import { paginationUserConnection as paginationConnection } from '../../../utils/connection';
 
@@ -41,12 +40,6 @@ export const users = queryField('users', {
     orderDirection,
     where,
   }, ctx):Promise<PaginationType> {
-    let whereArgs: UserWhereInput = {};
-    if (where) {
-      const whereParsed = JSON.parse(where.replace(/'/g, '"'));
-      whereArgs = { ...whereArgs, ...whereParsed };
-    }
-
     const result = cursorBasedOffsetPaginator({
       model: User,
       currentPage,
@@ -56,7 +49,8 @@ export const users = queryField('users', {
       orderBy,
       // @ts-ignore -> TODO : Change orderDirection as unionType
       orderDirection,
-      whereArgs,
+      whereArgs: where,
+      IsWhereArgsString: true,
     });
     return result;
   },

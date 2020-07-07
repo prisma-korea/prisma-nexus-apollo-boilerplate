@@ -21,6 +21,7 @@ interface Props<T> {
   orderBy: string;
   orderDirection: 'asc' | 'desc';
   whereArgs: any;
+  IsWhereArgsString: boolean;
 }
 
 export async function cursorBasedOffsetPaginator({
@@ -32,9 +33,15 @@ export async function cursorBasedOffsetPaginator({
   orderBy,
   orderDirection,
   whereArgs,
+  IsWhereArgsString = false,
 }: Props<typeof model>): Promise<PaginationType> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
+  }
+
+  // IsWhereArgsString
+  if (IsWhereArgsString && whereArgs) {
+    whereArgs = JSON.parse(whereArgs.replace(/'/g, '"'));
   }
 
   // totalCount

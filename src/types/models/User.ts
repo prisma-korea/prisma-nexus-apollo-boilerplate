@@ -75,6 +75,7 @@ export const User = objectType({
           // @ts-ignore -> TODO : Change orderDirection as unionType
           orderDirection,
           whereArgs,
+          IsWhereArgsString: false,
         });
         return result;
       },
