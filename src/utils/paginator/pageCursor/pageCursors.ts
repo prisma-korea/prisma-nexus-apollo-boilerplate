@@ -2,27 +2,27 @@ import { PageCursorType, pageToCursorObject } from './cursorObject';
 import { pageCursorsToArray } from './cursorArray';
 
 // Returns the total number of pagination results capped to PAGE_NUMBER_CAP.
-export function computeTotalPages(totalCount:number, size: number): number {
+export function computeTotalPages(totalCount: number, size: number): number {
   return Math.ceil(totalCount / size);
 }
 
 export interface PageCursorsType {
-  first: PageCursorType,
-  previous: PageCursorType
-  around: [PageCursorType],
-  next: PageCursorType
-  last: PageCursorType,
+  first: PageCursorType;
+  previous: PageCursorType;
+  around: [PageCursorType];
+  next: PageCursorType;
+  last: PageCursorType;
 }
 
 interface Props<T, K> {
   pageInfo: {
-    currentPage: number,
-    size: number,
-    buttonNum: number,
-  },
-  model: K,
-  totalCount: number,
-  findManyArgs: T,
+    currentPage: number;
+    size: number;
+    buttonNum: number;
+  };
+  model: K;
+  totalCount: number;
+  findManyArgs: T;
 }
 
 export async function createPageCursors<FindManyArgs>({
@@ -34,7 +34,11 @@ export async function createPageCursors<FindManyArgs>({
   // If buttonNum is even, bump it up by 1, and log out a warning.
   if (buttonNum % 2 === 0) {
     // eslint-disable-next-line
-    console.log(`buttonNum of ${buttonNum} passed to page cursors, but using ${buttonNum + 1} instead for the pagination logic`);
+    console.log(
+      `buttonNum of ${buttonNum} passed to page cursors, but using ${
+        buttonNum + 1
+      } instead for the pagination logic`,
+    );
     buttonNum = buttonNum + 1;
   }
 

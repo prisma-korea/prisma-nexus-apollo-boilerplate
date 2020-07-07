@@ -3,24 +3,24 @@ import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './pageError';
 import { PrismaClient } from '@prisma/client';
 
 interface PageEdgeType {
-  cursor: string,
-  node: any,
+  cursor: string;
+  node: any;
 }
 
 export interface PaginationType {
-  pageEdges: [PageEdgeType],
-  pageCursors: PageCursorsType
+  pageEdges: [PageEdgeType];
+  pageCursors: PageCursorsType;
 }
 
 interface Props<T, K> {
-  model: K,
-  currentPage: number,
-  cursor: string,
-  size: number,
-  buttonNum: number,
-  orderBy: string,
-  orderDirection: 'asc' | 'desc',
-  whereArgs: T,
+  model: K;
+  currentPage: number;
+  cursor: string;
+  size: number;
+  buttonNum: number;
+  orderBy: string;
+  orderDirection: 'asc' | 'desc';
+  whereArgs: T;
 }
 
 export async function cursorBasedOffsetPaginator<FindManyArgs, WhereInput>({

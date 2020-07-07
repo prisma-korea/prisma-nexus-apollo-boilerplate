@@ -1,21 +1,21 @@
 import { PrismaClient } from '@prisma/client';
 
 interface Props<T, K> {
-  page: number,
+  page: number;
   pageInfo: {
-    currentPage: number,
-    size: number,
-    totalPages: number,
-  },
-  model: K,
-  findManyArgs: T,
+    currentPage: number;
+    size: number;
+    totalPages: number;
+  };
+  model: K;
+  findManyArgs: T;
 }
 
 export interface PageCursorType {
-    cursor: string,
-    page: number,
-    isCurrent: boolean,
-  }
+  cursor: string;
+  page: number;
+  isCurrent: boolean;
+}
 
 // Returns an opaque cursor for a page.
 export async function pageToCursorObject<FindManyArgs>({
@@ -50,7 +50,7 @@ export async function pageToCursorObject<FindManyArgs>({
     });
     cursorId = result[0].id;
 
-  // last
+    // last
   } else if (page === totalPages) {
     let findManyArgsForLast: FindManyArgs;
     // @ts-ignore
@@ -85,7 +85,7 @@ export async function pageToCursorObject<FindManyArgs>({
     });
     cursorId = result[0].id;
 
-  // around & previous
+    // around & previous
   } else {
     const distance = (page - currentPage) * size;
     const takeSkipArgs = {
