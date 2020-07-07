@@ -23,19 +23,23 @@ const cursorPostConnection = objectType({
 const pageCursorsPostConnection = objectType({
   name: 'pageCursorsPostConnection',
   definition(t) {
-    t.field('previous', {
-      type: cursorPostConnection,
-      nullable: true,
-    });
     t.field('first', {
       type: cursorPostConnection,
       nullable: true,
     });
-    t.field('last', {
+    t.field('previous', {
       type: cursorPostConnection,
       nullable: true,
     });
     t.list.field('around', {
+      type: cursorPostConnection,
+      nullable: true,
+    });
+    t.field('next', {
+      type: cursorPostConnection,
+      nullable: true,
+    });
+    t.field('last', {
       type: cursorPostConnection,
       nullable: true,
     });

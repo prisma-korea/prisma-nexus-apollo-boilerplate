@@ -23,19 +23,23 @@ const cursorUserConnection = objectType({
 const pageCursorsUserConnection = objectType({
   name: 'pageCursorsUserConnection',
   definition(t) {
-    t.field('previous', {
-      type: cursorUserConnection,
-      nullable: true,
-    });
     t.field('first', {
       type: cursorUserConnection,
       nullable: true,
     });
-    t.field('last', {
+    t.field('previous', {
       type: cursorUserConnection,
       nullable: true,
     });
     t.list.field('around', {
+      type: cursorUserConnection,
+      nullable: true,
+    });
+    t.field('next', {
+      type: cursorUserConnection,
+      nullable: true,
+    });
+    t.field('last', {
       type: cursorUserConnection,
       nullable: true,
     });

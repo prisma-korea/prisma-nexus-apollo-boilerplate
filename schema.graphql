@@ -50,6 +50,7 @@ type pageCursorsPostConnection {
   around: [cursorPostConnection!]
   first: cursorPostConnection
   last: cursorPostConnection
+  next: cursorPostConnection
   previous: cursorPostConnection
 }
 
@@ -57,6 +58,7 @@ type pageCursorsUserConnection {
   around: [cursorUserConnection!]
   first: cursorUserConnection
   last: cursorUserConnection
+  next: cursorUserConnection
   previous: cursorUserConnection
 }
 
