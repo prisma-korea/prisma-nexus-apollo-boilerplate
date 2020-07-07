@@ -11,7 +11,7 @@ interface Props<T, K> {
   findManyArgs: T,
 }
 
-interface pageCursor {
+export interface PageCursorType {
     cursor: string,
     page: number,
     isCurrent: boolean,
@@ -23,7 +23,7 @@ export async function pageToCursorObject<FindManyArgs>({
   pageInfo,
   model,
   findManyArgs,
-}: Props<FindManyArgs, typeof model>): Promise<pageCursor> {
+}: Props<FindManyArgs, typeof model>): Promise<PageCursorType> {
   const { currentPage, size, totalPages } = pageInfo;
   let cursorId: number | string;
   const prisma = new PrismaClient();

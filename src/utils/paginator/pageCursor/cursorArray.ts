@@ -1,4 +1,4 @@
-import { pageToCursorObject } from './cursorObject';
+import { PageCursorType, pageToCursorObject } from './cursorObject';
 
 interface Props<T, K> {
   start: number;
@@ -12,12 +12,6 @@ interface Props<T, K> {
   findManyArgs: T;
 }
 
-interface pageCursor {
-  cursor: string,
-  page: number,
-  isCurrent: boolean,
-}
-
 // Returns an array of PageCursor objects
 // from start to end (page numbers).
 export async function pageCursorsToArray<FindManyArgs>({
@@ -26,7 +20,7 @@ export async function pageCursorsToArray<FindManyArgs>({
   pageInfo,
   model,
   findManyArgs,
-}: Props<FindManyArgs, typeof model>): Promise<pageCursor[]> {
+}: Props<FindManyArgs, typeof model>): Promise<PageCursorType[]> {
   let page;
   const cursors = [];
   for (page = start; page <= end; page++) {

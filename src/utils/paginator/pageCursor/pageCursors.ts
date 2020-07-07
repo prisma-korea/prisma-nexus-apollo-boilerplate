@@ -1,22 +1,16 @@
+import { PageCursorType, pageToCursorObject } from './cursorObject';
 import { pageCursorsToArray } from './cursorArray';
-import { pageToCursorObject } from './cursorObject';
 
 // Returns the total number of pagination results capped to PAGE_NUMBER_CAP.
 export function computeTotalPages(totalCount:number, size: number): number {
   return Math.ceil(totalCount / size);
 }
 
-interface pageCursor {
-  cursor: string,
-  page: number,
-  isCurrent: boolean,
-}
-
-interface pageCursors {
-  first: pageCursor,
-  around: [pageCursor],
-  last: pageCursor,
-  previous: pageCursor
+export interface PageCursorsType {
+  first: PageCursorType,
+  around: [PageCursorType],
+  last: PageCursorType,
+  previous: PageCursorType
 }
 
 interface Props<T, K> {
@@ -35,7 +29,7 @@ export async function createPageCursors<FindManyArgs>({
   model,
   findManyArgs,
   totalCount,
-}: Props<FindManyArgs, typeof model>): Promise<pageCursors> {
+}: Props<FindManyArgs, typeof model>): Promise<PageCursorsType> {
   // If buttonNum is even, bump it up by 1, and log out a warning.
   if (buttonNum % 2 === 0) {
     // eslint-disable-next-line

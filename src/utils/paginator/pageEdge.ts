@@ -1,24 +1,15 @@
+import { PageCursorsType, createPageCursors } from './pageCursor';
 import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './pageError';
 import { PrismaClient } from '@prisma/client';
-import { createPageCursors } from './pageCursor';
 
 interface PageEdgeType {
   cursor: string,
   node: any,
 }
-interface PageCursorType {
-  cursor: string,
-  page: number,
-  isCurrent: boolean,
-}
+
 export interface PaginationType {
   pageEdges: [PageEdgeType],
-  pageCursors: {
-    previous: PageCursorType,
-    first: PageCursorType,
-    around: [PageCursorType],
-    last: PageCursorType,
-  }
+  pageCursors: PageCursorsType
 }
 
 interface Props<T, K> {
