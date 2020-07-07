@@ -12,18 +12,18 @@ export interface PaginationType {
   pageCursors: PageCursorsType;
 }
 
-interface Props<T, K> {
-  model: K;
+interface Props<T> {
+  model: T;
   currentPage: number;
   cursor: string;
   size: number;
   buttonNum: number;
   orderBy: string;
   orderDirection: 'asc' | 'desc';
-  whereArgs: T;
+  whereArgs: any;
 }
 
-export async function cursorBasedOffsetPaginator<FindManyArgs, WhereInput>({
+export async function cursorBasedOffsetPaginator({
   model,
   currentPage,
   cursor,
@@ -32,7 +32,7 @@ export async function cursorBasedOffsetPaginator<FindManyArgs, WhereInput>({
   orderBy,
   orderDirection,
   whereArgs,
-}: Props<WhereInput, typeof model>): Promise<PaginationType> {
+}: Props<typeof model>): Promise<PaginationType> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
   }
@@ -47,7 +47,7 @@ export async function cursorBasedOffsetPaginator<FindManyArgs, WhereInput>({
   });
 
   // findManyArgs
-  let findManyArgs: FindManyArgs;
+  let findManyArgs;
   if (whereArgs) {
     findManyArgs = { ...findManyArgs, where: { ...whereArgs } };
   }
@@ -84,7 +84,7 @@ export async function cursorBasedOffsetPaginator<FindManyArgs, WhereInput>({
     node: result,
   }));
 
-  const pageCursors = await createPageCursors<FindManyArgs>({
+  const pageCursors = await createPageCursors({
     pageInfo: {
       currentPage,
       size,

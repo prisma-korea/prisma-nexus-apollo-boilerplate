@@ -1,14 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 
-interface Props<T, K> {
+interface Props<T> {
   page: number;
   pageInfo: {
     currentPage: number;
     size: number;
     totalPages: number;
   };
-  model: K;
-  findManyArgs: T;
+  model: T;
+  findManyArgs: any;
 }
 
 export interface PageCursorType {
@@ -18,12 +18,12 @@ export interface PageCursorType {
 }
 
 // Returns an opaque cursor for a page.
-export async function pageToCursorObject<FindManyArgs>({
+export async function pageToCursorObject({
   page,
   pageInfo,
   model,
   findManyArgs,
-}: Props<FindManyArgs, typeof model>): Promise<PageCursorType> {
+}: Props<typeof model>): Promise<PageCursorType> {
   const { currentPage, size, totalPages } = pageInfo;
   let cursorId: number | string;
   const prisma = new PrismaClient();
@@ -31,16 +31,12 @@ export async function pageToCursorObject<FindManyArgs>({
 
   // first
   if (page === 1) {
-    let findManyArgsForFirst: FindManyArgs;
-    // @ts-ignore
+    let findManyArgsForFirst;
     if (findManyArgs?.orderBy) {
-      // @ts-ignore
       const { orderBy } = findManyArgs;
       findManyArgsForFirst = { ...findManyArgsForFirst, orderBy: { ...orderBy } };
     }
-    // @ts-ignore
     if (findManyArgs?.where) {
-      // @ts-ignore
       const { where } = findManyArgs;
       findManyArgsForFirst = { ...findManyArgsForFirst, where: { ...where } };
     }
@@ -52,12 +48,9 @@ export async function pageToCursorObject<FindManyArgs>({
 
     // last
   } else if (page === totalPages) {
-    let findManyArgsForLast: FindManyArgs;
-    // @ts-ignore
+    let findManyArgsForLast;
     if (findManyArgs?.orderBy) {
-      // @ts-ignore
       const orderByKey = Object.keys(findManyArgs.orderBy)[0];
-      // @ts-ignore
       const orderDirection = findManyArgs.orderBy[orderByKey] === 'asc' ? 'desc' : 'asc';
       findManyArgsForLast = {
         ...findManyArgsForLast,
@@ -73,9 +66,7 @@ export async function pageToCursorObject<FindManyArgs>({
         },
       };
     }
-    // @ts-ignore
     if (findManyArgs?.where) {
-      // @ts-ignore
       const { where } = findManyArgs;
       findManyArgsForLast = { ...findManyArgsForLast, where: { ...where } };
     }
