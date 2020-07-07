@@ -1,7 +1,7 @@
 import { FindManyUserArgs, UserWhereInput } from '@prisma/client';
+import { PaginationType, cursorBasedOffsetPaginator } from '../../../utils/paginator';
 import { intArg, queryField, stringArg } from '@nexus/schema';
 import { User } from '../../models';
-import { cursorBasedOffsetPaginator } from '../../../utils/paginator';
 import { getUserId } from '../../../utils';
 import { paginationUserConnection as paginationConnection } from '../../../utils/connection';
 
@@ -17,25 +17,6 @@ export const me = queryField('me', {
     });
   },
 });
-
-interface PageEdgeType {
-  cursor: string,
-  node: typeof User,
-}
-interface PageCursorType {
-  cursor: string,
-  page: number,
-  isCurrent: boolean,
-}
-interface PaginationType {
-  pageEdges: [PageEdgeType],
-  pageCursors: {
-    previous: PageCursorType,
-    first: PageCursorType,
-    around: [PageCursorType],
-    last: PageCursorType,
-  }
-}
 
 export const users = queryField('users', {
   type: paginationConnection,

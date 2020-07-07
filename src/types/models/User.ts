@@ -1,7 +1,7 @@
 import { FindManyPostArgs, PostWhereInput } from '@prisma/client';
+import { PaginationType, cursorBasedOffsetPaginator } from '../../utils/paginator';
 import { intArg, objectType, stringArg } from '@nexus/schema';
 import { Post } from './Post';
-import { cursorBasedOffsetPaginator } from '../../utils/paginator';
 import { getUserId } from '../../utils';
 import { paginationPostConnection as paginationConnection } from '../../utils/connection';
 
@@ -13,25 +13,6 @@ export const Profile = objectType({
     t.model.authType();
   },
 });
-
-interface PageEdgeType {
-  cursor: string,
-  node: typeof Post,
-}
-interface PageCursorType {
-  cursor: string,
-  page: number,
-  isCurrent: boolean,
-}
-interface PaginationType {
-  pageEdges: [PageEdgeType],
-  pageCursors: {
-    previous: PageCursorType,
-    first: PageCursorType,
-    around: [PageCursorType],
-    last: PageCursorType,
-  }
-}
 
 export const User = objectType({
   name: 'User',

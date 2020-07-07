@@ -2,17 +2,17 @@ import { ErrorCursorOrCurrentPageArgNotGivenTogether } from './pageError';
 import { PrismaClient } from '@prisma/client';
 import { createPageCursors } from './pageCursor';
 
-interface PageEdgeType<T> {
+interface PageEdgeType {
   cursor: string,
-  node: T,
+  node: any,
 }
 interface PageCursorType {
   cursor: string,
   page: number,
   isCurrent: boolean,
 }
-interface PaginationType<T> {
-  pageEdges: [PageEdgeType<T>],
+export interface PaginationType {
+  pageEdges: [PageEdgeType],
   pageCursors: {
     previous: PageCursorType,
     first: PageCursorType,
@@ -41,7 +41,7 @@ export async function cursorBasedOffsetPaginator<FindManyArgs, WhereInput>({
   orderBy,
   orderDirection,
   whereArgs,
-}: Props<WhereInput, typeof model>): Promise<PaginationType<typeof model>> {
+}: Props<WhereInput, typeof model>): Promise<PaginationType> {
   if ((!cursor || !currentPage) && !(!cursor && !currentPage)) {
     throw ErrorCursorOrCurrentPageArgNotGivenTogether();
   }
