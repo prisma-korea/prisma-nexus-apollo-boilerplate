@@ -1,7 +1,7 @@
 import { FindManyPostArgs, PostWhereInput } from '@prisma/client';
 import { intArg, objectType, stringArg } from '@nexus/schema';
 import { Post } from './Post';
-import { createPageEdges } from '../../utils/paginator';
+import { cursorBasedOffsetPaginator } from '../../utils/paginator';
 import { getUserId } from '../../utils';
 import { paginationPostConnection as paginationConnection } from '../../utils/connection';
 
@@ -84,7 +84,7 @@ export const User = objectType({
           whereArgs = { ...whereArgs, ...whereParsed };
         }
 
-        const result = await createPageEdges<FindManyPostArgs, PostWhereInput>({
+        const result = await cursorBasedOffsetPaginator<FindManyPostArgs, PostWhereInput>({
           model: Post,
           currentPage,
           cursor,

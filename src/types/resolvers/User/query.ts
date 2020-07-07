@@ -1,7 +1,7 @@
 import { FindManyUserArgs, UserWhereInput } from '@prisma/client';
 import { intArg, queryField, stringArg } from '@nexus/schema';
 import { User } from '../../models';
-import { createPageEdges } from '../../../utils/paginator';
+import { cursorBasedOffsetPaginator } from '../../../utils/paginator';
 import { getUserId } from '../../../utils';
 import { paginationUserConnection as paginationConnection } from '../../../utils/connection';
 
@@ -66,7 +66,7 @@ export const users = queryField('users', {
       whereArgs = { ...whereArgs, ...whereParsed };
     }
 
-    const result = createPageEdges<FindManyUserArgs, UserWhereInput>({
+    const result = cursorBasedOffsetPaginator<FindManyUserArgs, UserWhereInput>({
       model: User,
       currentPage,
       cursor,

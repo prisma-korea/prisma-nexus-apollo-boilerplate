@@ -32,7 +32,7 @@ interface Props<T, K> {
   whereArgs: T,
 }
 
-export async function createPageEdges<FindManyArgs, WhereInput>({
+export async function cursorBasedOffsetPaginator<FindManyArgs, WhereInput>({
   model,
   currentPage,
   cursor,
