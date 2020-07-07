@@ -8,9 +8,10 @@ export function computeTotalPages(totalCount:number, size: number): number {
 
 export interface PageCursorsType {
   first: PageCursorType,
-  around: [PageCursorType],
-  last: PageCursorType,
   previous: PageCursorType
+  around: [PageCursorType],
+  next: PageCursorType
+  last: PageCursorType,
 }
 
 interface Props<T, K> {
@@ -135,6 +136,15 @@ export async function createPageCursors<FindManyArgs>({
       findManyArgs,
     });
     pageCursors.previous = previous;
+  }
+  if (totalPages > currentPage) {
+    const next = await pageToCursorObject<FindManyArgs>({
+      page: currentPage + 1,
+      pageInfo,
+      model,
+      findManyArgs,
+    });
+    pageCursors.next = next;
   }
   return pageCursors;
 }
