@@ -42,7 +42,7 @@ export const User = objectType({
         orderDirection: stringArg({
           default: 'desc',
         }),
-        where: stringArg(),
+        whereArgs: stringArg(),
       },
       async resolve(_parent, {
         currentPage,
@@ -51,18 +51,18 @@ export const User = objectType({
         buttonNum,
         orderBy,
         orderDirection,
-        where,
+        whereArgs,
       }, ctx):Promise<PaginationType> {
         const userId = getUserId(ctx);
 
-        let whereArgs: PostWhereInput = {
+        let whereArgsExtra: PostWhereInput = {
           user: {
             id: userId,
           },
         };
-        if (where) {
-          const whereParsed = JSON.parse(where.replace(/'/g, '"'));
-          whereArgs = { ...whereArgs, ...whereParsed };
+        if (whereArgs) {
+          const whereArgsParsed = JSON.parse(whereArgs.replace(/'/g, '"'));
+          whereArgsExtra = { ...whereArgsExtra, ...whereArgsParsed };
         }
 
         const result = await cursorBasedOffsetPaginator({
@@ -74,7 +74,7 @@ export const User = objectType({
           orderBy,
           // @ts-ignore -> TODO : Change orderDirection as unionType
           orderDirection,
-          whereArgs,
+          whereArgs: whereArgsExtra,
           IsWhereArgsString: false,
         });
         return result;

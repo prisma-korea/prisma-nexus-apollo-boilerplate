@@ -28,7 +28,7 @@ export const users = queryField('users', {
     orderDirection: stringArg({
       default: 'desc',
     }),
-    where: stringArg(),
+    whereArgs: stringArg(),
   },
   nullable: true,
   resolve(_parent, {
@@ -38,7 +38,7 @@ export const users = queryField('users', {
     buttonNum,
     orderBy,
     orderDirection,
-    where,
+    whereArgs,
   }, ctx):Promise<PaginationType> {
     const result = cursorBasedOffsetPaginator({
       model: User,
@@ -49,7 +49,7 @@ export const users = queryField('users', {
       orderBy,
       // @ts-ignore -> TODO : Change orderDirection as unionType
       orderDirection,
-      whereArgs: where,
+      whereArgs,
       IsWhereArgsString: true,
     });
     return result;
