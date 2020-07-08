@@ -53,6 +53,19 @@ export async function cursorBasedOffsetPaginator({
     },
   });
 
+  if (!totalCount) {
+    return {
+      pageEdges: null,
+      pageCursors: {
+        first: null,
+        previous: null,
+        around: null,
+        next: null,
+        last: null,
+      },
+    };
+  }
+
   // findManyArgs
   let findManyArgs;
   if (whereArgs) {
