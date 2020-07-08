@@ -48,9 +48,6 @@ export async function createPageCursors({
 
   // Degenerate case of no records found. 1 / 1 / 1
   if (totalPages === 0) {
-    // pageCursors = {
-    //   around: [pageToCursorObject(1, 1, pageInfo, model, findManyArgs)],
-    // }
     pageCursors = {
       around: [],
     };
