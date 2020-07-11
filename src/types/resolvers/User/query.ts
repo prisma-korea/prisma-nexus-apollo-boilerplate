@@ -51,6 +51,7 @@ export const users = queryField('users', {
       orderDirection,
       whereArgs,
       IsWhereArgsString: true,
+      prisma: ctx.prisma,
     });
     return result;
   },

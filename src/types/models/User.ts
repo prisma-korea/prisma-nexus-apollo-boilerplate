@@ -76,6 +76,7 @@ export const User = objectType({
           orderDirection,
           whereArgs: whereArgsExtra,
           IsWhereArgsString: false,
+          prisma: ctx.prisma,
         });
         return result;
       },
