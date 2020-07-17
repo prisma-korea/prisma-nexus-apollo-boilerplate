@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "local": "dotenv -e ./dotenv/.env -- nodemon --exec ts-node --files src/server.ts",
-    "dev": "dotenv -e ./dotenv/.env -- ts-node-dev --no-notify --respawn src/server.ts",
+    "dev": "dotenv -e ./dotenv/.env -- ts-node-dev --no-notify --respawn --transpile-only src/server.ts",
     "start": "node dist/server",
     "clean": "rm -rf dist",
     "build": "npm -s run clean && npm -s run generate && tsc",
