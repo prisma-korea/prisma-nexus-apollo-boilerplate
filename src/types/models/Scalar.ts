@@ -1,7 +1,12 @@
-import { asNexusMethod, enumType, scalarType } from '@nexus/schema';
-
+import { arg, asNexusMethod, core, enumType, scalarType } from '@nexus/schema';
 import { GraphQLDate } from 'graphql-iso-date';
+import GraphQLJSON from 'graphql-type-json';
 import { GraphQLUpload } from 'graphql-upload';
+
+export const JSON = asNexusMethod(GraphQLJSON, 'json');
+export function jsonArg(opts: core.NexusArgConfig<'JSON'>) {
+  return arg({ ...opts, type: 'JSON' });
+}
 
 export const AuthType = enumType({
   name: 'AuthType',
