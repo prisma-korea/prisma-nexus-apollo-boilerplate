@@ -1,5 +1,5 @@
 import { PaginationType, prismaOffsetPagination } from '../../utils/paginator';
-import { intArg, objectType, stringArg } from '@nexus/schema';
+import { arg, intArg, objectType, stringArg } from '@nexus/schema';
 import { Post } from './Post';
 import { PostWhereInput } from '@prisma/client';
 import { getUserId } from '../../utils';
@@ -42,7 +42,7 @@ export const User = objectType({
         orderDirection: stringArg({
           default: 'desc',
         }),
-        where: stringArg(),
+        where: arg({ type: 'JSON' }),
       },
       async resolve(_parent, {
         currentPage,
@@ -61,8 +61,7 @@ export const User = objectType({
           },
         };
         if (where) {
-          const whereParsed = JSON.parse(where.replace(/'/g, '"'));
-          whereExtra = { ...whereExtra, ...whereParsed };
+          whereExtra = { ...whereExtra, ...where };
         }
 
         const result = await prismaOffsetPagination({
@@ -75,7 +74,6 @@ export const User = objectType({
           // @ts-ignore -> TODO : Change orderDirection as unionType
           orderDirection,
           where: whereExtra,
-          IsWhereString: false,
           prisma: ctx.prisma,
         });
         return result;

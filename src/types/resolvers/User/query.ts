@@ -1,5 +1,5 @@
 import { PaginationType, prismaOffsetPagination } from '../../../utils/paginator';
-import { intArg, queryField, stringArg } from '@nexus/schema';
+import { arg, intArg, queryField, stringArg } from '@nexus/schema';
 import { User } from '../../models';
 import { getUserId } from '../../../utils';
 import { paginationUserConnection as paginationConnection } from '../../../utils/connection';
@@ -28,7 +28,7 @@ export const users = queryField('users', {
     orderDirection: stringArg({
       default: 'desc',
     }),
-    where: stringArg(),
+    where: arg({ type: 'JSON' }),
   },
   nullable: true,
   resolve(_parent, {
@@ -50,7 +50,6 @@ export const users = queryField('users', {
       // @ts-ignore -> TODO : Change orderDirection as unionType
       orderDirection,
       where,
-      IsWhereString: true,
       prisma: ctx.prisma,
     });
     return result;
