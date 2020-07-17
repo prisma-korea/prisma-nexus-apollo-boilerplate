@@ -109,7 +109,7 @@ type Query {
   filterPosts(searchString: String): [Post!]!
   me: User
   post(id: Int): Post
-  users(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, whereArgs: String): paginationUserConnection
+  users(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, where: String): paginationUserConnection
 }
 
 type Subscription {
@@ -131,7 +131,7 @@ type User {
   nickname: String
   phone: String
   photoURL: String
-  posts(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, whereArgs: String): paginationPostConnection!
+  posts(buttonNum: Int, currentPage: Int, cursor: String, orderBy: String, orderDirection: String = "desc", size: Int, where: String): paginationPostConnection!
   profile: Profile
   thumbURL: String
   updatedAt: DateTime

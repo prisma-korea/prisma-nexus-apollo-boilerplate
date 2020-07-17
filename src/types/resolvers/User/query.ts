@@ -28,7 +28,7 @@ export const users = queryField('users', {
     orderDirection: stringArg({
       default: 'desc',
     }),
-    whereArgs: stringArg(),
+    where: stringArg(),
   },
   nullable: true,
   resolve(_parent, {
@@ -38,7 +38,7 @@ export const users = queryField('users', {
     buttonNum,
     orderBy,
     orderDirection,
-    whereArgs,
+    where,
   }, ctx):Promise<PaginationType> {
     const result = prismaOffsetPagination({
       model: User,
@@ -49,8 +49,8 @@ export const users = queryField('users', {
       orderBy,
       // @ts-ignore -> TODO : Change orderDirection as unionType
       orderDirection,
-      whereArgs,
-      IsWhereArgsString: true,
+      where,
+      IsWhereString: true,
       prisma: ctx.prisma,
     });
     return result;

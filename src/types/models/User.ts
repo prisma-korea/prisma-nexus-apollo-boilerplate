@@ -42,7 +42,7 @@ export const User = objectType({
         orderDirection: stringArg({
           default: 'desc',
         }),
-        whereArgs: stringArg(),
+        where: stringArg(),
       },
       async resolve(_parent, {
         currentPage,
@@ -51,18 +51,18 @@ export const User = objectType({
         buttonNum,
         orderBy,
         orderDirection,
-        whereArgs,
+        where,
       }, ctx):Promise<PaginationType> {
         const userId = getUserId(ctx);
 
-        let whereArgsExtra: PostWhereInput = {
+        let whereExtra: PostWhereInput = {
           user: {
             id: userId,
           },
         };
-        if (whereArgs) {
-          const whereArgsParsed = JSON.parse(whereArgs.replace(/'/g, '"'));
-          whereArgsExtra = { ...whereArgsExtra, ...whereArgsParsed };
+        if (where) {
+          const whereParsed = JSON.parse(where.replace(/'/g, '"'));
+          whereExtra = { ...whereExtra, ...whereParsed };
         }
 
         const result = await prismaOffsetPagination({
@@ -74,8 +74,8 @@ export const User = objectType({
           orderBy,
           // @ts-ignore -> TODO : Change orderDirection as unionType
           orderDirection,
-          whereArgs: whereArgsExtra,
-          IsWhereArgsString: false,
+          where: whereExtra,
+          IsWhereString: false,
           prisma: ctx.prisma,
         });
         return result;
