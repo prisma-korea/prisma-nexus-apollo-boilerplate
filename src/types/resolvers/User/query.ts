@@ -1,4 +1,4 @@
-import { PaginationType, cursorBasedOffsetPaginator } from '../../../utils/paginator';
+import { PaginationType, prismaOffsetPagination } from '../../../utils/paginator';
 import { intArg, queryField, stringArg } from '@nexus/schema';
 import { User } from '../../models';
 import { getUserId } from '../../../utils';
@@ -40,7 +40,7 @@ export const users = queryField('users', {
     orderDirection,
     whereArgs,
   }, ctx):Promise<PaginationType> {
-    const result = cursorBasedOffsetPaginator({
+    const result = prismaOffsetPagination({
       model: User,
       currentPage,
       cursor,
