@@ -1,5 +1,6 @@
 import { intArg, mutationField, stringArg } from '@nexus/schema';
-import { getUserId } from '../../../utils';
+
+import { getUserId } from '../../utils';
 
 export const createDraft = mutationField('createDraft', {
   type: 'Post',

@@ -1,4 +1,4 @@
-import { APP_SECRET, getUserId } from '../../../utils';
+import { APP_SECRET, getUserId } from '../../utils';
 import {
   USER_SIGNED_IN,
   USER_UPDATED,
