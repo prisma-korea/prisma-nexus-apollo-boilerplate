@@ -4,19 +4,15 @@ import {
   USER_UPDATED,
 } from './subscription';
 import { compare, hash } from 'bcryptjs';
-import { inputObjectType, mutationField, stringArg } from '@nexus/schema';
+import { inputObjectType, mutationField, nonNull, stringArg } from '@nexus/schema';
 
 import { sign } from 'jsonwebtoken';
 
 export const UserInputType = inputObjectType({
   name: 'UserCreateInput',
   definition(t) {
-    t.string('email', {
-      required: true,
-    });
-    t.string('password', {
-      required: true,
-    });
+    t.nonNull.string('email');
+    t.nonNull.string('password');
     t.string('name');
     t.string('nickname');
     t.date('birthday');
@@ -66,8 +62,8 @@ export const signUp = mutationField('signUp', {
 export const signIn = mutationField('signIn', {
   type: 'AuthPayload',
   args: {
-    email: stringArg({ nullable: false }),
-    password: stringArg({ nullable: false }),
+    email: nonNull(stringArg()),
+    password: nonNull(stringArg()),
   },
   resolve: async (_parent, { email, password }, ctx) => {
     const { pubsub } = ctx;

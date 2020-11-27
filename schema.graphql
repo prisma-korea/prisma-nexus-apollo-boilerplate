@@ -3,8 +3,8 @@
 
 
 type AuthPayload {
-  token: String!
-  user: User!
+  token: String
+  user: User
 }
 
 enum AuthType {
@@ -26,12 +26,12 @@ scalar DateTime
 scalar Gender
 
 type Mutation {
-  createDraft(content: String, title: String!): Post!
+  createDraft(content: String, title: String!): Post
   deletePost(id: Int!): Post
   publish(id: Int): Post
-  signIn(email: String!, password: String!): AuthPayload!
-  signUp(user: UserCreateInput): AuthPayload!
-  updateProfile(user: UserUpdateInput): User!
+  signIn(email: String!, password: String!): AuthPayload
+  signUp(user: UserCreateInput): AuthPayload
+  updateProfile(user: UserUpdateInput): User
 }
 
 type Post {
@@ -52,15 +52,15 @@ type Profile {
 }
 
 type Query {
-  feed: [Post!]!
-  filterPosts(searchString: String): [Post!]!
+  feed: [Post]
+  filterPosts(searchString: String): [Post]
   me: User
   post(id: Int): Post
 }
 
 type Subscription {
-  userSignedIn(userId: String!): User!
-  userUpdated(userId: String!): User!
+  userSignedIn(userId: String!): User
+  userUpdated(userId: String!): User
 }
 
 """The `Upload` scalar type represents a file upload."""

@@ -1,8 +1,8 @@
-import { intArg, queryField, stringArg } from '@nexus/schema';
+import { intArg, list, queryField, stringArg } from '@nexus/schema';
 
 export const feed = queryField('feed', {
-  type: 'Post',
-  list: true,
+  type: list('Post'),
+
   resolve: (parent, args, ctx) => {
     return ctx.prisma.post.findMany({
       where: { published: true },
@@ -11,11 +11,9 @@ export const feed = queryField('feed', {
 });
 
 export const filterPosts = queryField('filterPosts', {
-  type: 'Post',
-  list: true,
-  args: {
-    searchString: stringArg({ nullable: true }),
-  },
+  type: list('Post'),
+  args: { searchString: stringArg() },
+
   resolve: (parent, { searchString }, ctx) => {
     return ctx.prisma.post.findMany({
       where: {
@@ -38,8 +36,8 @@ export const filterPosts = queryField('filterPosts', {
 
 export const post = queryField('post', {
   type: 'Post',
-  nullable: true,
   args: { id: intArg() },
+
   resolve: (parent, { id }, ctx) => {
     return ctx.prisma.post.findOne({
       where: {
