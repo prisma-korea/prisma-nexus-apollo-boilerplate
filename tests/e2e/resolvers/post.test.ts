@@ -7,9 +7,9 @@ import {
   postQuery,
   publishMutation,
   signUpMutation,
-} from './setup/queries';
+} from '../queries';
 
-import { testHost } from './setup/testSetup';
+import { testHost } from '../testSetup';
 
 let client: GraphQLClient;
 

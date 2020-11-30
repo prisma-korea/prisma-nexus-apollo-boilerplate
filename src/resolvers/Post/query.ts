@@ -39,7 +39,7 @@ export const post = queryField('post', {
   args: { id: intArg() },
 
   resolve: (parent, { id }, ctx) => {
-    return ctx.prisma.post.findOne({
+    return ctx.prisma.post.findUnique({
       where: {
         id: Number(id),
       },

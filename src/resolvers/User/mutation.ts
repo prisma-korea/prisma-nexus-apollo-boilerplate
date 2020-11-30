@@ -68,7 +68,7 @@ export const signIn = mutationField('signIn', {
   resolve: async (_parent, { email, password }, ctx) => {
     const { pubsub } = ctx;
 
-    const user = await ctx.prisma.user.findOne({
+    const user = await ctx.prisma.user.findUnique({
       where: {
         email,
       },
