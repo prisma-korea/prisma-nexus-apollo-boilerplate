@@ -73,8 +73,8 @@ describe('user resolvers', () => {
     });
 
     expect(res.errors).toBe(undefined);
-    expect(res.data.signUp).toHaveProperty('name');
-    expect(res.data.signUp.name).toEqual('jessie');
+    expect(res.data.signUp).toHaveProperty('user');
+    expect(res.data.signUp.user.name).toEqual('jessie');
   });
 
   it('signIn mutation', async () => {
