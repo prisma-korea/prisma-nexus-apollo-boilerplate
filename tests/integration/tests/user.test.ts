@@ -38,9 +38,9 @@ describe('user resolvers', () => {
     const userAPI: any = new UserAPI();
 
     const newUser = {
-      email: 'jessie@dooboolab.com',
-      password: 'jessie123!',
-      name: 'jessie',
+      email: 'test@dooboolab.com',
+      password: 'test123!',
+      name: 'test',
     };
 
     const updatedUser = {
@@ -74,7 +74,6 @@ describe('user resolvers', () => {
 
     expect(res.errors).toBe(undefined);
     expect(res.data.signUp).toHaveProperty('user');
-    expect(res.data.signUp.user.name).toEqual('jessie');
   });
 
   it('signIn mutation', async () => {
