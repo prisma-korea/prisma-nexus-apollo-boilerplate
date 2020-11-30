@@ -576,10 +576,10 @@
     iterall "^1.2.2"
     tslib "^1.9.3"
 
-"@nexus/schema@^0.19.1":
-  version "0.19.1"
-  resolved "https://registry.yarnpkg.com/@nexus/schema/-/schema-0.19.1.tgz#6326ec79fb255173747c2fb7463f957cd278d024"
-  integrity sha512-TuH8oxi4p1YMvaqBzUOa0Or+sAQxH5rvjg6DTSoobLqkTdhvBTdQBgikez/sjhxcs0O/dHjiJmb8xAKAXdB/kA==
+"@nexus/schema@^0.19.2":
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/@nexus/schema/-/schema-0.19.2.tgz#a589fedd1b3a57b1d8ce56f0a86a700513083ef0"
+  integrity sha512-/bN+Rb+uM98n/Hll1bgODd8y5yOEPOUY6lMi3QdKOR7uYA7CEt0zbfbEEBb/S7YB07/S8s6HBDX1r8YGAu+Wwg==
   dependencies:
     iterall "^1.3.0"
     tslib "^2.0.3"
@@ -610,7 +610,7 @@
   resolved "https://registry.yarnpkg.com/@prisma/bar/-/bar-0.0.1.tgz#088c4fbbb79c588391437ade9fd3a85527e753b3"
   integrity sha512-FVLhwVkbfhXlBhroWfIXMLi+3Jh9IEzYp+9z+MUUiw3ZsbcoAil7CN9/QIjHc4/TcCRyRfuSmT7qCnn4O+TjJw==
 
-"@prisma/cli@~2.12.0":
+"@prisma/cli@~2.12.1":
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/@prisma/cli/-/cli-2.12.1.tgz#1f52ab2a363ae4cc88d4d18933bd304ed7f80612"
   integrity sha512-obkwK95dEeifCdVehG0rS0BlPQGLsOtc9U1MgbrjNX3MnhXQdwROnvymfPB3DBlNyoLoHGklPgi9UlwBokNXcQ==
@@ -618,10 +618,10 @@
     "@prisma/bar" "^0.0.1"
     "@prisma/engines" "2.12.0-18.cf0680a1bfe8d5e743dc659cc7f08009f9587d58"
 
-"@prisma/client@2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.12.0.tgz#6910a24607357ea272ecb516f44eb8730bd7bd4c"
-  integrity sha512-OozxNF5I8+amaMLlb7NZK3XbvmUgBRUpq2cqresmIhsrfH/LaOaAr4riDW3cF/YgIEpb4tgPoSUEDI3VKyD4yg==
+"@prisma/client@2.12.1":
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.12.1.tgz#ff655c9cc1188035303f374d2f9f794b66fc18c7"
+  integrity sha512-HP4/E9sRdxw/FB7XP4EeRa5ri8Lp1U/L7G4VAA95aM8C+8ARioQHMNDpEjC83NrOrOr4EcaZV5pXDDQL1H+F0g==
   dependencies:
     "@prisma/engines-version" "2.12.0-18.cf0680a1bfe8d5e743dc659cc7f08009f9587d58"
 
@@ -6023,10 +6023,10 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-prettier@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.0.tgz#8a03c7777883b29b37fb2c4348c66a78e980418b"
-  integrity sha512-yYerpkvseM4iKD/BXLYUkQV5aKt4tQPqaGW6EsZjzyu0r7sVZZNPJW4Y8MyKmicp6t42XUPcBVA+H6sB3gqndw==
+prettier@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"
+  integrity sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==
 
 pretty-format@^25.2.1, pretty-format@^25.4.0:
   version "25.4.0"
