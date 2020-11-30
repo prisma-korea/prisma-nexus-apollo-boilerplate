@@ -34,40 +34,6 @@ describe('user resolvers', () => {
     expect(res.data.me.id).toEqual('cuid1');
   });
 
-  it('user query', async () => {
-    const userAPI: any = new UserAPI();
-
-    const setUser = (): Promise<NexusGenRootTypes['User']> =>
-      Promise.resolve(user());
-
-    userAPI.get = jest.fn(setUser);
-
-    const { query } = testServer(() => ({ userAPI }), userResolvers);
-
-    const USER = gql`
-      query user($id: String!) {
-        user(id: $id){
-          id
-          name
-          email
-        }
-      }
-    `;
-
-    const userId = {
-      id: 'cuid1',
-    };
-
-    const res = await query({
-      query: USER,
-      variables: userId,
-    });
-
-    expect(res.errors).toBe(undefined);
-    expect(res.data).toHaveProperty('user');
-    expect(res.data.user.name).toEqual('tester');
-  });
-
   it('signUp mutation', async () => {
     const userAPI: any = new UserAPI();
 
@@ -92,8 +58,11 @@ describe('user resolvers', () => {
     const SIGN_UP = gql`
       mutation signUp($user: UserCreateInput) {
         signUp(user: $user) {
-          id
-          name
+          token
+          user {
+            id
+            name
+          }
         }
       }
     `;
