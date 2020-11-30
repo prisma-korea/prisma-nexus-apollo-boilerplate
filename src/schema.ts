@@ -10,9 +10,15 @@ export const schema = makeSchema({
     resolvers,
     models,
   },
-  plugins: [nexusSchemaPrisma()],
+  plugins: [
+    nexusSchemaPrisma({
+      outputs: {
+        typegen: path.join(__dirname, 'generated/typegen-nexus-plugin-prisma.d.ts'),
+      },
+    }),
+  ],
   outputs: {
-    schema: path.join(__dirname, './../schema.graphql'),
+    schema: path.join(__dirname, './generated/schema.graphql'),
     typegen: path.join(__dirname, './generated/nexus.ts'),
   },
   typegenAutoConfig: {
