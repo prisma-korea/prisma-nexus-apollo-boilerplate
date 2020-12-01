@@ -1,12 +1,10 @@
-import { getUserId } from '../../utils';
 import { queryField } from '@nexus/schema';
 
 export const me = queryField('me', {
   type: 'User',
 
-  resolve: (parent, args, ctx) => {
-    const userId = getUserId(ctx);
-    return ctx.prisma.user.findUnique({
+  resolve: (_, __, { prisma, userId }) => {
+    return prisma.user.findUnique({
       where: {
         id: userId,
       },

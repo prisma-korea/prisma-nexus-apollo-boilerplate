@@ -7,7 +7,7 @@ export const createApp = (): Express => {
 
   app.use(cors());
   app.get('/', (req, res) => {
-    res.send('It works x 1');
+    res.send('It works - ver. 0.0.1');
   });
 
   return app;

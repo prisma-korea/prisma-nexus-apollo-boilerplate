@@ -1,4 +1,3 @@
-import { APP_SECRET, getUserId } from '../../utils';
 import {
   USER_SIGNED_IN,
   USER_UPDATED,
@@ -6,6 +5,7 @@ import {
 import { compare, hash } from 'bcryptjs';
 import { inputObjectType, mutationField, nonNull, stringArg } from '@nexus/schema';
 
+import { APP_SECRET } from '../../utils/auth';
 import { sign } from 'jsonwebtoken';
 
 export const UserInputType = inputObjectType({
@@ -93,12 +93,8 @@ export const updateProfile = mutationField('updateProfile', {
   args: {
     user: 'UserUpdateInput',
   },
-  resolve: async (_parent, { user }, ctx) => {
-    const { pubsub } = ctx;
-
-    const userId = getUserId(ctx);
-
-    const updated = await ctx.prisma.user.update({
+  resolve: async (_parent, { user }, { pubsub, prisma, userId }) => {
+    const updated = await prisma.user.update({
       where: { id: userId },
       data: user,
     });
