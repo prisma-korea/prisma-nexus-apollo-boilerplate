@@ -33,11 +33,12 @@ yarn generate
 1. Change models in `schema.prisma`.
    > Note that `prisma/migrations` dir is included in `.gitignore` in this repo but it should not be ignored in production.
 2. Run migration script.
-   > Note that this should be targeting the production database. Locally, you can just run `yarn db-push:local`
+   > Note that this should be targeting the production database. Locally, you can just run `yarn db-push`.
    ```
    yarn migrate
    ```
 3. Deploy migration to production.
+   > Note you may want to run `yarn migrate:dev` beforhand to test your migration.
    ```
    yarn migrate:deploy
    ```
