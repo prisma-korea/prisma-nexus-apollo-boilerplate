@@ -128,7 +128,7 @@ describe('Resolver - User', () => {
 
       apolloClient.subscribe({
         query: userSignedInSubscription,
-        variables: { userId: userId },
+        variables: { userId },
       }).subscribe({
         next: ({ data }) => {
           return (subscriptionValue = data.userSignedIn);
@@ -145,11 +145,11 @@ describe('Resolver - User', () => {
       expect(response2).toHaveProperty('signIn');
       expect(response2.signIn).toHaveProperty('token');
       expect(response2.signIn).toHaveProperty('user');
-      // expect(response2.signIn.user.id).toEqual(subscriptionValue.id);
-      // expect(response2.signIn.user.email).toEqual(subscriptionValue.email);
-      // expect(response2.signIn.user.name).toEqual(subscriptionValue.name);
-      // expect(response2.signIn.user.gender).toEqual(subscriptionValue.gender);
-      // expect(response2.signIn.user.createdAt).toEqual(subscriptionValue.createdAt);
+      expect(response2.signIn.user.id).toEqual(subscriptionValue.id);
+      expect(response2.signIn.user.email).toEqual(subscriptionValue.email);
+      expect(response2.signIn.user.name).toEqual(subscriptionValue.name);
+      expect(response2.signIn.user.gender).toEqual(subscriptionValue.gender);
+      expect(response2.signIn.user.createdAt).toEqual(subscriptionValue.createdAt);
     });
 
     it("should subscribe 'userUpdated' after 'updateProfile' mutation", async () => {
