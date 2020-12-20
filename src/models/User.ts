@@ -1,4 +1,4 @@
-import { objectType } from '@nexus/schema';
+import { objectType } from 'nexus';
 
 export const Profile = objectType({
   name: 'Profile',
@@ -25,7 +25,7 @@ export const User = objectType({
     t.model.createdAt();
     t.model.updatedAt();
     t.model.deletedAt();
-    t.model.posts({ pagination: false });
+    t.model.posts();
     t.model.profile();
   },
 });

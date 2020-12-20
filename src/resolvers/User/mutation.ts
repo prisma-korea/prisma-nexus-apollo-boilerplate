@@ -3,7 +3,7 @@ import {
   USER_UPDATED,
 } from './subscription';
 import { compare, hash } from 'bcryptjs';
-import { inputObjectType, mutationField, nonNull, stringArg } from '@nexus/schema';
+import { inputObjectType, mutationField, nonNull, stringArg } from 'nexus';
 
 import { APP_SECRET } from '../../utils/auth';
 import { sign } from 'jsonwebtoken';

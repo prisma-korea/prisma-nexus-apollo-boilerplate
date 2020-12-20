@@ -1,4 +1,4 @@
-import { intArg, list, queryField, stringArg } from '@nexus/schema';
+import { intArg, list, queryField, stringArg } from 'nexus';
 
 export const feed = queryField('feed', {
   type: list('Post'),
