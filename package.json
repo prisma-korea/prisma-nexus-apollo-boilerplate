@@ -29,7 +29,6 @@
     "studio": "dotenv -e ./dotenv/.env -- prisma studio"
   },
   "dependencies": {
-    "nexus": "^0.19.2",
     "@prisma/client": "2.13.1",
     "apollo-server": "^2.19.0",
     "bcryptjs": "^2.4.3",
