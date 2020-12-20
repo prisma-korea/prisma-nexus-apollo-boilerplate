@@ -5,12 +5,12 @@ jobs:
   build:
     # machine: true
     docker:
-      - image: circleci/node:12.12.0
-      - image: circleci/postgres:9.6.2-alpine
+      - image: circleci/node:14.9.0
+      - image: circleci/postgres:12.5
         environment:
-          POSTGRES_DB: postgres
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test!
+          POSTGRES_DB: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: dooboolab0!
     working_directory: ~/app
     steps:
       - checkout
