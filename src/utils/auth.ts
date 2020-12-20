@@ -26,7 +26,7 @@ require('dotenv').config({ path: envPath });
 interface Token { userId: string; }
 
 export function getUserId({ req }: {req: ReqI18n}): string {
-  const Authorization = req.get('Authorization');
+  const Authorization = req?.get?.('Authorization');
 
   if (!Authorization) return;
 
