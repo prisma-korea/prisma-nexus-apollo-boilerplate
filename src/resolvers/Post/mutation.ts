@@ -1,4 +1,4 @@
-import { intArg, mutationField, nonNull, stringArg } from '@nexus/schema';
+import { intArg, mutationField, nonNull, stringArg } from 'nexus';
 
 export const createDraft = mutationField('createDraft', {
   type: 'Post',
