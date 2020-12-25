@@ -1,4 +1,3 @@
-import { GraphQLClient, request } from 'graphql-request';
 import {
   createDraftMutation,
   deletePostMutation,
@@ -6,71 +5,47 @@ import {
   filterPostsQuery,
   postQuery,
   publishMutation,
-  signUpMutation,
-} from '../queries';
+} from './queries';
 
-import { testHost } from '../testSetup';
+import { getTestUtils } from '../testUtils';
 
-let client: GraphQLClient;
-
-const userVariables = {
-  user: {
-    name: 'dooboo1',
-    email: 'dooboo@dooboolab.com',
-    password: 'password',
-  },
-};
-
-describe('Resolver - Post', () => {
-  it('should signUp user', async () => {
-    const response = await request(testHost, signUpMutation, userVariables);
-
-    expect(response).toHaveProperty('signUp');
-    expect(response.signUp).toHaveProperty('token');
-    expect(response.signUp).toHaveProperty('user');
-    expect(response.signUp.user.email).toEqual(userVariables.user.email);
-
-    // hyochan => Setup auth client for next test case
-    client = new GraphQLClient(testHost, {
-      headers: {
-        authorization: response.signUp.token,
-      },
-    });
-  });
-
-  describe('Resolver - after signIn', () => {
+export function post(): void {
+  describe('Post', () => {
     it('should create auth user`s draft', async () => {
+      const { graphqlClient } = getTestUtils();
+
       const variables = {
         title: 'title',
         content: 'content',
       };
 
-      const response = await client.request(createDraftMutation, variables);
+      const response = await graphqlClient.request(createDraftMutation, variables);
       expect(response).toHaveProperty('createDraft');
       expect(response.createDraft).toHaveProperty('id');
       expect(response.createDraft.title).toEqual('title');
     });
 
     it('should publish user`s draft', async () => {
-      const variables = {
-        id: 1,
-      };
+      const { graphqlClient } = getTestUtils();
+      const variables = { id: 1 };
 
-      const response = await client.request(publishMutation, variables);
+      const response = await graphqlClient.request(publishMutation, variables);
       expect(response).toHaveProperty('publish');
       expect(response.publish).toHaveProperty('id');
       expect(response.publish.title).toEqual('title');
     });
 
     it('should query feed', async () => {
-      const response = await client.request(feedQuery);
+      const { graphqlClient } = getTestUtils();
+      const response = await graphqlClient.request(feedQuery);
 
       expect(response).toHaveProperty('feed');
       expect(response.feed).toHaveLength(1);
     });
 
     it('should query post', async () => {
-      const response = await client.request(postQuery, {
+      const { graphqlClient } = getTestUtils();
+      const response = await graphqlClient.request(postQuery, {
         id: 1,
       });
 
@@ -78,7 +53,9 @@ describe('Resolver - Post', () => {
     });
 
     it('should filter posts', async () => {
-      const response = await client.request(filterPostsQuery, {
+      const { graphqlClient } = getTestUtils();
+
+      const response = await graphqlClient.request(filterPostsQuery, {
         searchString: 'title',
       });
 
@@ -86,21 +63,25 @@ describe('Resolver - Post', () => {
     });
 
     it('should delete user`s draft', async () => {
+      const { graphqlClient } = getTestUtils();
+
       const variables = {
         id: 1,
       };
 
-      const response = await client.request(deletePostMutation, variables);
+      const response = await graphqlClient.request(deletePostMutation, variables);
       expect(response).toHaveProperty('deletePost');
       expect(response.deletePost).toHaveProperty('id');
       expect(response.deletePost.id).toEqual(1);
     });
 
     it('should query feed after deletion', async () => {
-      const response = await client.request(feedQuery);
+      const { graphqlClient } = getTestUtils();
+
+      const response = await graphqlClient.request(feedQuery);
 
       expect(response).toHaveProperty('feed');
       expect(response.feed).toHaveLength(0);
     });
   });
-});
+}

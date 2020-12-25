@@ -1,24 +1,56 @@
 import { PrismaClient } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
-import express from 'express';
+import { assert } from './utils/assert';
 import { getUserId } from './utils/auth';
 
-const prisma = new PrismaClient();
-const { JWT_SECRET } = process.env;
-
 export interface Context {
-  request: {
-    req: express.Request,
-  };
+  request: { req: ReqI18n };
   prisma: PrismaClient;
   pubsub: PubSub;
   appSecret: string;
-  userId: string;
+  userId: string | null;
 }
 
 const pubsub = new PubSub();
 
-export function createContext(request: { req: express.Request }): Context {
+const createPrismaClient = (): PrismaClient => {
+  const prisma = new PrismaClient();
+
+  //! Specify soft deletion models here.
+  // prisma.$use(async (params, next) => {
+  //   const softDeletionModels = [
+  //   ];
+
+  //   if (params.model && softDeletionModels.includes(params.model)) {
+  //     if (params.action === 'delete') {
+  //       params.action = 'update';
+  //       params.args.data = { deletedAt: new Date().toISOString() };
+  //     }
+
+  //     if (params.action === 'deleteMany') {
+  //       params.action = 'updateMany';
+
+  //       if (params.args.data !== undefined) {
+  //         params.args.data.deletedAt = new Date().toISOString();
+  //       } else {
+  //         params.args.data = { deletedAt: new Date().toISOString() };
+  //       }
+  //     }
+  //   }
+
+  //   return next(params);
+  // });
+
+  return prisma;
+};
+
+export const prisma = createPrismaClient();
+
+export function createContext(prisma: PrismaClient, request: { req: ReqI18n }): Context {
+  const { JWT_SECRET } = process.env;
+
+  assert(JWT_SECRET, 'Missing JWT_SECRET environment variable');
+
   return {
     request,
     prisma,
@@ -27,25 +59,3 @@ export function createContext(request: { req: express.Request }): Context {
     userId: getUserId(request),
   };
 }
-
-prisma.$use(async (params, next) => {
-  const softDeletionModels = [
-    'User',
-  ];
-
-  if (softDeletionModels.includes(params.model)) {
-    if (params.action === 'delete') {
-      params.action = 'update';
-      params.args.data = { deletedAt: new Date().toISOString() };
-    }
-    if (params.action === 'deleteMany') {
-      params.action = 'updateMany';
-      if (params.args.data !== undefined) {
-        params.args.data.deletedAt = new Date().toISOString();
-      } else {
-        params.args.data = { deletedAt: new Date().toISOString() };
-      }
-    }
-  }
-  return next(params);
-});
