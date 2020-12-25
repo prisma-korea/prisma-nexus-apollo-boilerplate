@@ -9,7 +9,7 @@ const rules = {
       .findUnique({
         where: { id: Number(id) },
       })
-      .author();
+      .user();
     return userId === author.id;
   }),
 };
