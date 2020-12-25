@@ -37,7 +37,7 @@ export const publish = mutationField('publish', {
 
   resolve: (__, { id }, { prisma }) => {
     return prisma.post.update({
-      where: { id },
+      where: { id: id ?? undefined },
       data: { published: true },
     });
   },

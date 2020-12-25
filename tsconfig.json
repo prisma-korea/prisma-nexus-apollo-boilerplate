@@ -22,6 +22,7 @@
     "outDir":"dist/",
     "baseUrl":"src/",
     "listFiles":false,
+    "strict": true,
     "skipLibCheck": true
   },
   "files": ["environment.d.ts"],

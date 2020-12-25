@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const signUpMutation = /* GraphQL */`
-  mutation signUp($user: UserCreateInput) {
+  mutation signUp($user: UserCreateInput!) {
     signUp(user: $user) {
       token,
       user {
@@ -30,7 +30,7 @@ export const signInMutation = /* GraphQL */`
 `;
 
 export const updateProfileMutation = /* GraphQL */`
-  mutation updateProfile($user: UserUpdateInput) {
+  mutation updateProfile($user: UserUpdateInput!) {
     updateProfile(user: $user) {
       name
       gender

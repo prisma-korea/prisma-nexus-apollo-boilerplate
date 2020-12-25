@@ -28,7 +28,7 @@ interface Token { userId: string; }
 export function getUserId({ req }: {req: ReqI18n}): string {
   const Authorization = req?.get?.('Authorization');
 
-  if (!Authorization) return;
+  if (!Authorization) return '';
 
   const token = Authorization.replace('Bearer ', '');
   const verifiedToken = verify(token, APP_SECRET) as Token;
@@ -37,11 +37,11 @@ export function getUserId({ req }: {req: ReqI18n}): string {
 }
 
 // eslint-disable-next-line
-export const getToken = (req: Request & any): string => {
+export const getToken = (req: Request & any): string | undefined => {
   const authHeader = req.get('Authorization');
 
   if (!authHeader) {
-    return null;
+    return undefined;
   }
 
   return authHeader.replace('Bearer ', '');

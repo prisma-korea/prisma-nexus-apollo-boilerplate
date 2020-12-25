@@ -16,20 +16,22 @@ export const filterPosts = queryField('filterPosts', {
 
   resolve: (parent, { searchString }, ctx) => {
     return ctx.prisma.post.findMany({
-      where: {
-        OR: [
-          {
-            title: {
-              contains: searchString,
-            },
-          },
-          {
-            content: {
-              contains: searchString,
-            },
-          },
-        ],
-      },
+      where: searchString
+        ? {
+            OR: [
+              {
+                title: {
+                  contains: searchString,
+                },
+              },
+              {
+                content: {
+                  contains: searchString,
+                },
+              },
+            ],
+          }
+        : {},
     });
   },
 });

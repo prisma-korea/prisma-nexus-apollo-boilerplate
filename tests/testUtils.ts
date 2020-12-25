@@ -20,7 +20,7 @@ export function getTestUtils(): TestUtils {
   assert(_testUtils, 'Test utilities are not initialized.');
 
   _testUtils.updateGraphqlClient = (client: GraphQLClient) => {
-    _testUtils.graphqlClient = client;
+    if (_testUtils) { _testUtils.graphqlClient = client; }
   };
 
   return _testUtils;

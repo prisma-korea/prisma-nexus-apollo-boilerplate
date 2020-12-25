@@ -6,6 +6,7 @@ import { compare, hash } from 'bcryptjs';
 import { inputObjectType, mutationField, nonNull, stringArg } from 'nexus';
 
 import { APP_SECRET } from '../../utils/auth';
+import { assert } from '../../utils/assert';
 import { sign } from 'jsonwebtoken';
 
 export const UserInputType = inputObjectType({
@@ -25,7 +26,6 @@ export const UserInputType = inputObjectType({
 export const UserUpdateInputType = inputObjectType({
   name: 'UserUpdateInput',
   definition(t) {
-    t.string('email');
     t.string('name');
     t.string('nickname');
     t.date('birthday');
@@ -38,7 +38,7 @@ export const UserUpdateInputType = inputObjectType({
 export const signUp = mutationField('signUp', {
   type: 'AuthPayload',
   args: {
-    user: 'UserCreateInput',
+    user: nonNull('UserCreateInput'),
   },
   resolve: async (_parent, { user }, ctx) => {
     const { name, email, password, gender } = user;
@@ -76,7 +76,7 @@ export const signIn = mutationField('signIn', {
     if (!user) {
       throw new Error(`No user found for email: ${email}`);
     }
-    const passwordValid = await compare(password, user.password);
+    const passwordValid = await compare(password, user.password || '') || false;
     if (!passwordValid) {
       throw new Error('Invalid password');
     }
@@ -91,9 +91,11 @@ export const signIn = mutationField('signIn', {
 export const updateProfile = mutationField('updateProfile', {
   type: 'User',
   args: {
-    user: 'UserUpdateInput',
+    user: nonNull('UserUpdateInput'),
   },
   resolve: async (_parent, { user }, { pubsub, prisma, userId }) => {
+    assert(userId, 'Not authorized.');
+
     const updated = await prisma.user.update({
       where: { id: userId },
       data: user,

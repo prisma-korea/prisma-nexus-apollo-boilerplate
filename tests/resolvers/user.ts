@@ -68,7 +68,7 @@ export function user(): void {
     expect(response.signIn.user.email).toEqual(variables.email);
 
     //! Replace gql client is replaced with authenticated one.
-    updateGraphqlClient(new GraphQLClient(testHost, {
+    updateGraphqlClient?.(new GraphQLClient(testHost, {
       headers: {
         authorization: response.signIn.token,
       },

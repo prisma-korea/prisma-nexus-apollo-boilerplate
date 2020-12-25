@@ -8,7 +8,7 @@ export interface Context {
   prisma: PrismaClient;
   pubsub: PubSub;
   appSecret: string;
-  userId: string | null;
+  userId: string;
 }
 
 const pubsub = new PubSub();
