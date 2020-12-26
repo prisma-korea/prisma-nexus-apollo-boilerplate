@@ -43,3 +43,12 @@ yarn generate
    ```
    yarn migrate:deploy
    ```
+
+#### Create test user
+```sh
+➜  ~ createuser --interactive --pwprompt
+Enter name of role to add: test
+Enter password for new role: 
+Enter it again: 
+Shall the new role be a superuser? (y/n) y
+```
