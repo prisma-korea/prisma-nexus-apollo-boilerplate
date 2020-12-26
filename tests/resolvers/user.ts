@@ -54,7 +54,7 @@ export function user(): void {
   });
 
   it('should signIn user', async () => {
-    const { graphqlClient, updateGraphqlClient } = getTestUtils();
+    const { graphqlClient, setAuthToken } = getTestUtils();
 
     const variables = {
       email: 'dooboo@dooboolab.com',
@@ -67,12 +67,8 @@ export function user(): void {
     expect(response.signIn).toHaveProperty('user');
     expect(response.signIn.user.email).toEqual(variables.email);
 
-    //! Replace gql client is replaced with authenticated one.
-    updateGraphqlClient?.(new GraphQLClient(testHost, {
-      headers: {
-        authorization: response.signIn.token,
-      },
-    }));
+    //! GQL client is replaced with authenticated one.
+    setAuthToken(response.signIn.token);
   });
 
   describe('Resolver - after signIn', () => {

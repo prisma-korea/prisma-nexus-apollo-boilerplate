@@ -1,4 +1,4 @@
-import { getTestUtils, setTestUtils } from './testUtils';
+import { TestUtils, getTestUtils, setTestUtils } from './testUtils';
 
 import ApolloClient from 'apollo-client';
 import { GraphQLClient } from 'graphql-request';
@@ -70,13 +70,13 @@ beforeAll(async () => {
     cache: new InMemoryCache(),
   });
 
-  setTestUtils({
+  setTestUtils(new TestUtils(
     apolloClient,
     server,
     prisma,
     graphqlClient,
     networkInterface,
-  });
+  ));
 });
 
 afterAll(async () => {
