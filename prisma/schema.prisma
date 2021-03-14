@@ -20,40 +20,40 @@ enum AuthType {
 }
 
 model User {
-  id          String      @default(cuid()) @id
-  email       String      @unique
-  password    String?
-  name        String?
-  nickname    String?
-  thumbURL    String?
-  photoURL    String?
-  birthDay    DateTime?
-  gender      Gender?
-  phone       String?
-  verified    Boolean?
-  createdAt   DateTime?   @default(now())
-  updatedAt   DateTime?   @default(now())
-  deletedAt   DateTime?
-  posts       Post[]
-  profile     Profile?
+  id        String    @id @default(cuid()) @db.VarChar(255)
+  email     String    @unique @db.VarChar(255)
+  password  String?   @db.VarChar(255)
+  name      String?   @db.VarChar(255)
+  nickname  String?   @db.VarChar(255)
+  thumbURL  String?   @db.VarChar(255)
+  photoURL  String?   @db.VarChar(255)
+  birthDay  DateTime?
+  gender    Gender?
+  phone     String?   @db.VarChar(255)
+  verified  Boolean?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+  deletedAt DateTime?
+  posts     Post[]
+  profile   Profile?
 }
 
 model Profile {
-  id          String      @default(cuid()) @id
-  socialId    String?
-  authType    AuthType?
-  userId      String      @unique
-  User        User        @relation(fields: [userId], references: [id])
+  id       String    @id @default(cuid()) @db.VarChar(255)
+  socialId String?
+  authType AuthType?
+  userId   String    @unique @db.VarChar(255)
+  User     User      @relation(fields: [userId], references: [id])
 }
 
 model Post {
-  id          Int         @default(autoincrement()) @id
-  title       String
-  content     String?
-  published   Boolean     @default(false)
-  userId      String
-  user        User        @relation(fields: [userId], references: [id])
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @default(now())
-  deletedAt   DateTime?
+  id        Int       @id @default(autoincrement())
+  title     String    @db.VarChar(255)
+  content   String?
+  published Boolean   @default(false)
+  userId    String    @db.VarChar(255)
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
 }
