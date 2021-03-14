@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { PubSub } from 'graphql-subscriptions';
-import { assert } from './utils/assert';
-import { getUserId } from './utils/auth';
+import {PrismaClient} from '@prisma/client';
+import {PubSub} from 'graphql-subscriptions';
+import {assert} from './utils/assert';
+import {getUserId} from './utils/auth';
 
 export interface Context {
-  request: { req: ReqI18n };
+  request: {req: ReqI18n};
   prisma: PrismaClient;
   pubsub: PubSub;
   appSecret: string;
@@ -46,14 +46,17 @@ const createPrismaClient = (): PrismaClient => {
 
 export const prisma = createPrismaClient();
 
-export function createContext(prisma: PrismaClient, request: { req: ReqI18n }): Context {
-  const { JWT_SECRET } = process.env;
+export function createContext(
+  prismaClient: PrismaClient,
+  request: {req: ReqI18n},
+): Context {
+  const {JWT_SECRET} = process.env;
 
   assert(JWT_SECRET, 'Missing JWT_SECRET environment variable');
 
   return {
     request,
-    prisma,
+    prisma: prismaClient,
     pubsub,
     appSecret: JWT_SECRET,
     userId: getUserId(request),

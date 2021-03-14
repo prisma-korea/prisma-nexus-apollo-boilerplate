@@ -1,9 +1,9 @@
-import { ApolloClient } from 'apollo-client';
-import { GraphQLClient } from 'graphql-request';
-import { Http2Server } from 'http2';
-import { PrismaClient } from '@prisma/client';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
-import { assert } from '../src/utils/assert';
+import {ApolloClient} from 'apollo-client';
+import {GraphQLClient} from 'graphql-request';
+import {Http2Server} from 'http2';
+import {PrismaClient} from '@prisma/client';
+import {SubscriptionClient} from 'subscriptions-transport-ws';
+import {assert} from '../src/utils/assert';
 
 export class TestUtils {
   public apolloClient: ApolloClient<any>;
@@ -28,7 +28,7 @@ export class TestUtils {
 
   setAuthToken = (token: string): void => {
     this.graphqlClient.setHeader('Authorization', `Bearer ${token}`);
-  }
+  };
 }
 
 let _testUtils: TestUtils | undefined;

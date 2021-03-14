@@ -1,15 +1,16 @@
-import { rule, shield } from 'graphql-shield';
+import {rule, shield} from 'graphql-shield';
 
 const rules = {
-  isAuthenticatedUser: rule()((_, __, { userId }) => {
+  isAuthenticatedUser: rule()((_, __, {userId}) => {
     return Boolean(userId);
   }),
-  isPostOwner: rule()(async (_, { id }, { prisma, userId }) => {
+  isPostOwner: rule()(async (_, {id}, {prisma, userId}) => {
     const author = await prisma.post
       .findUnique({
-        where: { id: Number(id) },
+        where: {id: Number(id)},
       })
       .user();
+
     return userId === author.id;
   }),
 };

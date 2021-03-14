@@ -1,6 +1,6 @@
-import { nonNull, stringArg, subscriptionField } from 'nexus';
+import {nonNull, stringArg, subscriptionField} from 'nexus';
 
-import { withFilter } from 'apollo-server';
+import {withFilter} from 'apollo-server';
 
 export const USER_SIGNED_IN = 'USER_SIGNED_IN';
 export const USER_UPDATED = 'USER_UPDATED';
@@ -12,10 +12,11 @@ export const userSignedIn = subscriptionField('userSignedIn', {
   },
   subscribe: withFilter(
     (_, args, ctx) => {
-      const { pubsub } = ctx;
+      const {pubsub} = ctx;
+
       return pubsub.asyncIterator(USER_SIGNED_IN);
     },
-    (payload, { userId }) => {
+    (payload, {userId}) => {
       return payload.id === userId;
     },
   ),
@@ -31,10 +32,11 @@ export const userUpdated = subscriptionField('userUpdated', {
   },
   subscribe: withFilter(
     (_, args, ctx) => {
-      const { pubsub } = ctx;
+      const {pubsub} = ctx;
+
       return pubsub.asyncIterator(USER_UPDATED);
     },
-    (payload, { userId }) => {
+    (payload, {userId}) => {
       return payload.id === userId;
     },
   ),

@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 
-export const signUpMutation = /* GraphQL */`
+export const signUpMutation = /* GraphQL */ `
   mutation signUp($user: UserCreateInput!) {
     signUp(user: $user) {
-      token,
+      token
       user {
         id
         name
@@ -14,9 +14,9 @@ export const signUpMutation = /* GraphQL */`
   }
 `;
 
-export const signInMutation = /* GraphQL */`
-  mutation signIn($email: String! $password: String!) {
-    signIn(email: $email password: $password) {
+export const signInMutation = /* GraphQL */ `
+  mutation signIn($email: String!, $password: String!) {
+    signIn(email: $email, password: $password) {
       token
       user {
         id
@@ -29,7 +29,7 @@ export const signInMutation = /* GraphQL */`
   }
 `;
 
-export const updateProfileMutation = /* GraphQL */`
+export const updateProfileMutation = /* GraphQL */ `
   mutation updateProfile($user: UserUpdateInput!) {
     updateProfile(user: $user) {
       name
@@ -38,16 +38,16 @@ export const updateProfileMutation = /* GraphQL */`
   }
 `;
 
-export const createDraftMutation = /* GraphQL */`
-  mutation createDraft($title: String! $content: String!) {
-    createDraft(title: $title content: $content) {
+export const createDraftMutation = /* GraphQL */ `
+  mutation createDraft($title: String!, $content: String!) {
+    createDraft(title: $title, content: $content) {
       id
       title
     }
   }
 `;
 
-export const publishMutation = /* GraphQL */`
+export const publishMutation = /* GraphQL */ `
   mutation publish($id: Int!) {
     publish(id: $id) {
       id
@@ -56,7 +56,7 @@ export const publishMutation = /* GraphQL */`
   }
 `;
 
-export const deletePostMutation = /* GraphQL */`
+export const deletePostMutation = /* GraphQL */ `
   mutation deletePost($id: Int!) {
     deletePost(id: $id) {
       id
@@ -64,7 +64,7 @@ export const deletePostMutation = /* GraphQL */`
   }
 `;
 
-export const meQuery = /* GraphQL */`
+export const meQuery = /* GraphQL */ `
   query me {
     me {
       id
@@ -74,7 +74,7 @@ export const meQuery = /* GraphQL */`
   }
 `;
 
-export const feedQuery = /* GraphQL */`
+export const feedQuery = /* GraphQL */ `
   query feed {
     feed {
       id
@@ -83,7 +83,7 @@ export const feedQuery = /* GraphQL */`
   }
 `;
 
-export const filterPostsQuery = /* GraphQL */`
+export const filterPostsQuery = /* GraphQL */ `
   query filterPosts($searchString: String!) {
     filterPosts(searchString: $searchString) {
       id
@@ -92,7 +92,7 @@ export const filterPostsQuery = /* GraphQL */`
   }
 `;
 
-export const postQuery = /* GraphQL */`
+export const postQuery = /* GraphQL */ `
   query post($id: Int!) {
     post(id: $id) {
       id
@@ -102,24 +102,24 @@ export const postQuery = /* GraphQL */`
 `;
 
 export const userUpdatedSubscription = gql`
-subscription userUpdated($userId: String!) {
-  userUpdated(userId: $userId) {
-    id
-    email
-    name
-    gender
+  subscription userUpdated($userId: String!) {
+    userUpdated(userId: $userId) {
+      id
+      email
+      name
+      gender
+    }
   }
-}
 `;
 
 export const userSignedInSubscription = gql`
-subscription userSignedIn($userId: String!) {
-  userSignedIn(userId: $userId) {
-    id
-    email
-    name
-    gender
-    createdAt
+  subscription userSignedIn($userId: String!) {
+    userSignedIn(userId: $userId) {
+      id
+      email
+      name
+      gender
+      createdAt
+    }
   }
-}
 `;

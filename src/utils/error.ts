@@ -1,8 +1,4 @@
-import {
-  ApolloError,
-  UserInputError,
-  ValidationError,
-} from 'apollo-server-core';
+import {ApolloError} from 'apollo-server-core';
 
 export enum ErrorString {
   UserNotExists = 'User does not exists',
@@ -15,37 +11,27 @@ export enum ErrorString {
   FirstLastNotSupported = 'Passing both `first` and `last` is not supported.',
 }
 
-export const ErrorEmailNotVerified =
-  (message: string): ApolloError => new ApolloError(
-    message,
-    'EMAIL_NOT_VERIFIED', {
-      parameter: 'verified',
-    });
+export const ErrorEmailNotVerified = (message: string): ApolloError =>
+  new ApolloError(message, 'EMAIL_NOT_VERIFIED', {
+    parameter: 'verified',
+  });
 
-export const ErrorPasswordIncorrect =
-  (message: string): ApolloError => new ApolloError(
-    message,
-    'PASSWORD_NOT_CORRECT', {
-      parameter: 'password',
-    });
+export const ErrorPasswordIncorrect = (message: string): ApolloError =>
+  new ApolloError(message, 'PASSWORD_NOT_CORRECT', {
+    parameter: 'password',
+  });
 
-export const ErrorEmailSentFailed =
-  (message: string): ApolloError => new ApolloError(
-    message,
-    'EMAIL_SENT_FAILED', {
-      parameter: 'email',
-    });
+export const ErrorEmailSentFailed = (message: string): ApolloError =>
+  new ApolloError(message, 'EMAIL_SENT_FAILED', {
+    parameter: 'email',
+  });
 
-export const ErrorEmailNotValid =
-  (message: string): ApolloError => new ApolloError(
-    message,
-    'EMAIL_VALIDATION', {
-      parameter: 'email',
-    });
+export const ErrorEmailNotValid = (message: string): ApolloError =>
+  new ApolloError(message, 'EMAIL_VALIDATION', {
+    parameter: 'email',
+  });
 
-export const ErrorEmailForUserExists =
-  (message: string): ApolloError => new ApolloError(
-    message,
-    'EMAIL_FOR_USER_EXISTS', {
-      parameter: 'email',
-    });
+export const ErrorEmailForUserExists = (message: string): ApolloError =>
+  new ApolloError(message, 'EMAIL_FOR_USER_EXISTS', {
+    parameter: 'email',
+  });

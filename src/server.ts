@@ -1,47 +1,44 @@
-import { createContext, prisma } from './context';
+import {createContext, prisma} from './context';
 
-import { ApolloServer } from 'apollo-server-express';
-import { Http2Server } from 'http2';
-import { PrismaClient } from '@prisma/client';
-import { applyMiddleware } from 'graphql-middleware';
-import { createApp } from './app';
-import { createServer as createHttpServer } from 'http';
+import {ApolloServer} from 'apollo-server-express';
+import {Http2Server} from 'http2';
+import {PrismaClient} from '@prisma/client';
+import {applyMiddleware} from 'graphql-middleware';
+import {createApp} from './app';
+import {createServer as createHttpServer} from 'http';
 import express from 'express';
-import { permissions } from './permissions';
-import { schema } from './schema';
+import {permissions} from './permissions';
+import {schema} from './schema';
 
-const { PORT = 5000, NODE_ENV } = process.env;
+const {PORT = 5000, NODE_ENV} = process.env;
 
-const schemaWithMiddleware = applyMiddleware(
-  schema,
-  permissions,
-);
+const schemaWithMiddleware = applyMiddleware(schema, permissions);
 
-const createApolloServer = (prisma: PrismaClient): ApolloServer => new ApolloServer({
-  schema: schemaWithMiddleware,
-  context: (req) => createContext(prisma, req),
-  introspection: NODE_ENV !== 'production',
-  playground: process.env.NODE_ENV !== 'production',
-  subscriptions: {
-    onConnect: (): void => {
-      process.stdout.write('Connected to websocket\n');
+const createApolloServer = (prisma: PrismaClient): ApolloServer =>
+  new ApolloServer({
+    schema: schemaWithMiddleware,
+    context: (req) => createContext(prisma, req),
+    introspection: NODE_ENV !== 'production',
+    playground: process.env.NODE_ENV !== 'production',
+    subscriptions: {
+      onConnect: (): void => {
+        process.stdout.write('Connected to websocket\n');
+      },
     },
-  },
-});
+  });
 
 const initializeApolloServer = (
   apollo: ApolloServer,
   app: express.Application,
   port: string | number,
-): () => void => {
-  apollo.applyMiddleware({ app });
+): (() => void) => {
+  apollo.applyMiddleware({app});
 
   return (): void => {
-    if (process.env.NODE_ENV !== 'test') {
+    if (process.env.NODE_ENV !== 'test')
       process.stdout.write(
         `🚀 Server ready at http://localhost:${port}${apollo.graphqlPath}\n`,
       );
-    }
   };
 };
 
@@ -51,7 +48,12 @@ export const startServer = async (
 ): Promise<Http2Server> => {
   const httpServer = createHttpServer(app);
   const apollo = createApolloServer(prisma);
-  const handleApolloServerInitilized = initializeApolloServer(apollo, app, port);
+
+  const handleApolloServerInitilized = initializeApolloServer(
+    apollo,
+    app,
+    port,
+  );
 
   apollo.installSubscriptionHandlers(httpServer);
 
@@ -59,7 +61,7 @@ export const startServer = async (
   httpServer.addListener('close', () => prisma.$disconnect());
 
   return new Promise((resolve) => {
-    httpServer.listen({ port }, () => {
+    httpServer.listen({port}, () => {
       handleApolloServerInitilized();
       resolve(httpServer);
     });

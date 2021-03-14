@@ -7,9 +7,8 @@ import {
   userUpdatedSubscription,
 } from './queries';
 
-import { GraphQLClient } from 'graphql-request';
-import { getTestUtils } from '../testUtils';
-import { testHost } from '../testSetup';
+import {getTestUtils} from '../testUtils';
+import {testHost} from '../testSetup';
 
 const userVariables = {
   user: {
@@ -22,7 +21,7 @@ const userVariables = {
 
 export function user(): void {
   it('should signUp user', async () => {
-    const { graphqlClient } = getTestUtils();
+    const {graphqlClient} = getTestUtils();
     const response = await graphqlClient.request(signUpMutation, userVariables);
 
     expect(response).toHaveProperty('signUp');
@@ -32,29 +31,33 @@ export function user(): void {
   });
 
   it('should throw error when user does not exists', async () => {
-    const { graphqlClient } = getTestUtils();
+    const {graphqlClient} = getTestUtils();
+
     const variables = {
       email: 'testtest@test.com',
       password: 'password',
     };
 
     const promise = graphqlClient.request(testHost, signInMutation, variables);
+
     expect(promise).rejects.toThrow();
   });
 
   it('should throw error when password is invalid', () => {
-    const { graphqlClient } = getTestUtils();
+    const {graphqlClient} = getTestUtils();
+
     const variables = {
       email: 'dooboo@dooboolab.com',
       password: 'invalid',
     };
 
     const promise = graphqlClient.request(testHost, signInMutation, variables);
+
     expect(promise).rejects.toThrow();
   });
 
   it('should signIn user', async () => {
-    const { graphqlClient, setAuthToken } = getTestUtils();
+    const {graphqlClient, setAuthToken} = getTestUtils();
 
     const variables = {
       email: 'dooboo@dooboolab.com',
@@ -62,6 +65,7 @@ export function user(): void {
     };
 
     const response = await graphqlClient.request(signInMutation, variables);
+
     expect(response).toHaveProperty('signIn');
     expect(response.signIn).toHaveProperty('token');
     expect(response.signIn).toHaveProperty('user');
@@ -80,8 +84,12 @@ export function user(): void {
     };
 
     it('should update user profile', async () => {
-      const { graphqlClient } = getTestUtils();
-      const response = await graphqlClient.request(updateProfileMutation, variables);
+      const {graphqlClient} = getTestUtils();
+
+      const response = await graphqlClient.request(
+        updateProfileMutation,
+        variables,
+      );
 
       expect(response).toHaveProperty('updateProfile');
       expect(response.updateProfile).toHaveProperty('name');
@@ -91,7 +99,7 @@ export function user(): void {
     });
 
     it('should throw error when invalid gender value is given', async () => {
-      const { graphqlClient } = getTestUtils();
+      const {graphqlClient} = getTestUtils();
 
       const variables = {
         user: {
@@ -106,7 +114,7 @@ export function user(): void {
     });
 
     it('should query me and get updated name', async () => {
-      const { graphqlClient } = getTestUtils();
+      const {graphqlClient} = getTestUtils();
       const response = await graphqlClient.request(meQuery);
 
       expect(response).toHaveProperty('me');
@@ -125,23 +133,30 @@ export function user(): void {
     };
 
     it("should subscribe 'userSignedIn' after 'signUp' mutation", async () => {
-      const { graphqlClient, apolloClient } = getTestUtils();
+      const {graphqlClient, apolloClient} = getTestUtils();
 
       let subscriptionValue;
-      const response1 = await graphqlClient.request(signUpMutation, userVariables);
+
+      const response1 = await graphqlClient.request(
+        signUpMutation,
+        userVariables,
+      );
+
       const userId = response1.signUp.user.id;
 
       expect(response1.signUp.user.name).toEqual(userVariables.user.name);
       expect(response1.signUp.user.gender).toEqual(userVariables.user.gender);
 
-      apolloClient.subscribe({
-        query: userSignedInSubscription,
-        variables: { userId: userId },
-      }).subscribe({
-        next: ({ data }) => {
-          return (subscriptionValue = data.userSignedIn);
-        },
-      });
+      apolloClient
+        .subscribe({
+          query: userSignedInSubscription,
+          variables: {userId: userId},
+        })
+        .subscribe({
+          next: ({data}) => {
+            return (subscriptionValue = data.userSignedIn);
+          },
+        });
 
       const variables = {
         email: 'newUser1@dooboolab.com',
@@ -157,11 +172,14 @@ export function user(): void {
       expect(response2.signIn.user.email).toEqual(subscriptionValue.email);
       expect(response2.signIn.user.name).toEqual(subscriptionValue.name);
       expect(response2.signIn.user.gender).toEqual(subscriptionValue.gender);
-      expect(response2.signIn.user.createdAt).toEqual(subscriptionValue.createdAt);
+
+      expect(response2.signIn.user.createdAt).toEqual(
+        subscriptionValue.createdAt,
+      );
     });
 
     it("should subscribe 'userUpdated' after 'updateProfile' mutation", async () => {
-      const { graphqlClient, apolloClient } = getTestUtils();
+      const {graphqlClient, apolloClient} = getTestUtils();
 
       let subscriptionValue;
 
@@ -176,14 +194,16 @@ export function user(): void {
 
       const userId = response.signIn.user.id;
 
-      apolloClient.subscribe({
-        query: userUpdatedSubscription,
-        variables: { userId },
-      }).subscribe({
-        next: ({ data }) => {
-          return (subscriptionValue = data.userUpdated);
-        },
-      });
+      apolloClient
+        .subscribe({
+          query: userUpdatedSubscription,
+          variables: {userId},
+        })
+        .subscribe({
+          next: ({data}) => {
+            return (subscriptionValue = data.userUpdated);
+          },
+        });
 
       const variables2 = {
         user: {
@@ -192,7 +212,10 @@ export function user(): void {
         },
       };
 
-      const response2 = await graphqlClient.request(updateProfileMutation, variables2);
+      const response2 = await graphqlClient.request(
+        updateProfileMutation,
+        variables2,
+      );
 
       expect(response2).toHaveProperty('updateProfile');
       expect(response2.updateProfile).toHaveProperty('name');

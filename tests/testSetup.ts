@@ -1,26 +1,26 @@
-import { TestUtils, getTestUtils, setTestUtils } from './testUtils';
+import {TestUtils, getTestUtils, setTestUtils} from './testUtils';
 
 import ApolloClient from 'apollo-client';
-import { GraphQLClient } from 'graphql-request';
-import { Headers } from 'cross-fetch';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import {GraphQLClient} from 'graphql-request';
+import {Headers} from 'cross-fetch';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 import NodeWebSocket from 'ws';
-import { PrismaClient } from '@prisma/client';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
-import { WebSocketLink } from 'apollo-link-ws';
-import { assert } from '../src/utils/assert';
-import { createApp } from '../src/app';
-import { execSync } from 'child_process';
+import {PrismaClient} from '@prisma/client';
+import {SubscriptionClient} from 'subscriptions-transport-ws';
+import {WebSocketLink} from 'apollo-link-ws';
+import {assert} from '../src/utils/assert';
+import {createApp} from '../src/app';
+import {execSync} from 'child_process';
 import express from 'express';
 import path from 'path';
-import { startServer } from '../src/server';
+import {startServer} from '../src/server';
 
 // @ts-ignore
 global.Headers = global.Headers || Headers;
 
 jest.setTimeout(30000);
 
-const { PORT = 5566, DATABASE_URL } = process.env;
+const {PORT = 5566, DATABASE_URL} = process.env;
 
 export const testSubscriptionHost = `ws://localhost:${PORT}/graphql`;
 export const testHost = `http://localhost:${PORT}/graphql`;
@@ -47,10 +47,7 @@ beforeAll(async () => {
   // Migrate test database.
   const prismaBinary = path.join(__dirname, '../node_modules/.bin/prisma');
 
-  execSync(
-    `${prismaBinary} db push --preview-feature`,
-    { env: process.env },
-  );
+  execSync(`${prismaBinary} db push --preview-feature`, {env: process.env});
 
   // Start server.
   const app: express.Application = createApp();
@@ -61,7 +58,7 @@ beforeAll(async () => {
 
   const networkInterface = new SubscriptionClient(
     testSubscriptionHost,
-    { reconnect: true },
+    {reconnect: true},
     NodeWebSocket,
   );
 
@@ -70,26 +67,25 @@ beforeAll(async () => {
     cache: new InMemoryCache(),
   });
 
-  setTestUtils(new TestUtils(
-    apolloClient,
-    server,
-    prisma,
-    graphqlClient,
-    networkInterface,
-  ));
+  setTestUtils(
+    new TestUtils(
+      apolloClient,
+      server,
+      prisma,
+      graphqlClient,
+      networkInterface,
+    ),
+  );
 });
 
 afterAll(async () => {
-  const { server, prisma, networkInterface } = getTestUtils();
+  const {server, prisma, networkInterface} = getTestUtils();
 
   // Close server.
   await new Promise((resolve, reject) => {
     server.close((err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(undefined);
-      }
+      if (err) reject(err);
+      else resolve(undefined);
     });
 
     networkInterface.close();

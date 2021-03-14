@@ -1,13 +1,10 @@
-import {
-  USER_SIGNED_IN,
-  USER_UPDATED,
-} from './subscription';
-import { compare, hash } from 'bcryptjs';
-import { inputObjectType, mutationField, nonNull, stringArg } from 'nexus';
+import {USER_SIGNED_IN, USER_UPDATED} from './subscription';
+import {compare, hash} from 'bcryptjs';
+import {inputObjectType, mutationField, nonNull, stringArg} from 'nexus';
 
-import { APP_SECRET } from '../../utils/auth';
-import { assert } from '../../utils/assert';
-import { sign } from 'jsonwebtoken';
+import {APP_SECRET} from '../../utils/auth';
+import {assert} from '../../utils/assert';
+import {sign} from 'jsonwebtoken';
 
 export const UserInputType = inputObjectType({
   name: 'UserCreateInput',
@@ -40,9 +37,10 @@ export const signUp = mutationField('signUp', {
   args: {
     user: nonNull('UserCreateInput'),
   },
-  resolve: async (_parent, { user }, ctx) => {
-    const { name, email, password, gender } = user;
+  resolve: async (_parent, {user}, ctx) => {
+    const {name, email, password, gender} = user;
     const hashedPassword = await hash(password, 10);
+
     const created = await ctx.prisma.user.create({
       data: {
         name,
@@ -53,7 +51,7 @@ export const signUp = mutationField('signUp', {
     });
 
     return {
-      token: sign({ userId: created.id }, APP_SECRET),
+      token: sign({userId: created.id}, APP_SECRET),
       user: created,
     };
   },
@@ -65,24 +63,26 @@ export const signIn = mutationField('signIn', {
     email: nonNull(stringArg()),
     password: nonNull(stringArg()),
   },
-  resolve: async (_parent, { email, password }, ctx) => {
-    const { pubsub } = ctx;
+  resolve: async (_parent, {email, password}, ctx) => {
+    const {pubsub} = ctx;
 
     const user = await ctx.prisma.user.findUnique({
       where: {
         email,
       },
     });
-    if (!user) {
-      throw new Error(`No user found for email: ${email}`);
-    }
-    const passwordValid = await compare(password, user.password || '') || false;
-    if (!passwordValid) {
-      throw new Error('Invalid password');
-    }
+
+    if (!user) throw new Error(`No user found for email: ${email}`);
+
+    const passwordValid =
+      (await compare(password, user.password || '')) || false;
+
+    if (!passwordValid) throw new Error('Invalid password');
+
     pubsub.publish(USER_SIGNED_IN, user);
+
     return {
-      token: sign({ userId: user.id }, APP_SECRET),
+      token: sign({userId: user.id}, APP_SECRET),
       user,
     };
   },
@@ -93,15 +93,16 @@ export const updateProfile = mutationField('updateProfile', {
   args: {
     user: nonNull('UserUpdateInput'),
   },
-  resolve: async (_parent, { user }, { pubsub, prisma, userId }) => {
+  resolve: async (_parent, {user}, {pubsub, prisma, userId}) => {
     assert(userId, 'Not authorized.');
 
     const updated = await prisma.user.update({
-      where: { id: userId },
+      where: {id: userId},
       data: user,
     });
 
     pubsub.publish(USER_UPDATED, updated);
+
     return updated;
   },
 });
