@@ -1,20 +1,20 @@
 import {ApolloClient} from 'apollo-client';
 import {GraphQLClient} from 'graphql-request';
-import {Http2Server} from 'http2';
 import {PrismaClient} from '@prisma/client';
+import {Server} from 'http';
 import {SubscriptionClient} from 'subscriptions-transport-ws';
 import {assert} from '../src/utils/assert';
 
 export class TestUtils {
   public apolloClient: ApolloClient<any>;
-  public server: Http2Server;
+  public server: Server;
   public prisma: PrismaClient;
   public graphqlClient: GraphQLClient;
   public networkInterface: SubscriptionClient;
 
   constructor(
     apolloClient: ApolloClient<any>,
-    server: Http2Server,
+    server: Server,
     prisma: PrismaClient,
     graphqlClient: GraphQLClient,
     networkInterfafce: SubscriptionClient,
@@ -27,7 +27,7 @@ export class TestUtils {
   }
 
   setAuthToken = (token: string): void => {
-    this.graphqlClient.setHeader('Authorization', `Bearer ${token}`);
+    this.graphqlClient.setHeader('Authorization', `${token}`);
   };
 }
 

@@ -30,13 +30,14 @@ interface Token {
   userId: string;
 }
 
-export function getUserId({req}: {req: ReqI18n}): string {
-  const Authorization = req?.get?.('Authorization');
+/**
+ * Extract userId from request.
+ * @returns user id if available. null otherwise.
+ */
+export function getUserId(authorization: string): string | null {
+  if (!authorization) return null;
 
-  if (!Authorization) return '';
-
-  const token = Authorization.replace('Bearer ', '');
-  const verifiedToken = verify(token, APP_SECRET) as Token;
+  const verifiedToken = verify(authorization, APP_SECRET) as Token;
 
   return verifiedToken && verifiedToken.userId;
 }

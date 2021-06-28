@@ -1,15 +1,11 @@
-import * as models from './models';
 import * as path from 'path';
-import * as resolvers from './resolvers';
+import * as types from './types';
 
 import {makeSchema} from 'nexus';
 import {nexusSchemaPrisma} from 'nexus-plugin-prisma/schema';
 
 export const schema = makeSchema({
-  types: {
-    resolvers,
-    models,
-  },
+  types,
   plugins: [
     nexusSchemaPrisma({
       outputs: {
