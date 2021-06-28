@@ -5,7 +5,7 @@ jobs:
   build:
     # machine: true
     docker:
-      - image: circleci/node:14.9.0
+      - image: circleci/node:14.13.0
       - image: circleci/postgres:12.5
         environment:
           POSTGRES_DB: test
@@ -23,7 +23,13 @@ jobs:
           name: Install packages
           working_directory: .
           command: |
-            yarn
+            yarn install --ignore-engines
+
+      - run:
+          name: Generate prisma types
+          working_directory: .
+          command: |
+            yarn generate
 
       - run:
           name: ESLint
