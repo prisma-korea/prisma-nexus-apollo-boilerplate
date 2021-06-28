@@ -1,5 +1,7 @@
 import {intArg, mutationField, nonNull, stringArg} from 'nexus';
 
+import {assert} from '../../utils/assert';
+
 export const createDraft = mutationField('createDraft', {
   type: 'Post',
   args: {
@@ -7,6 +9,8 @@ export const createDraft = mutationField('createDraft', {
     content: stringArg(),
   },
   resolve: (parent, {title, content}, {prisma, userId}) => {
+    assert(userId, 'Not authorized');
+
     return prisma.post.create({
       data: {
         title,
