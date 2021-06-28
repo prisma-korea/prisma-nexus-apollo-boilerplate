@@ -29,7 +29,7 @@
     "studio": "dotenv -e ./dotenv/.env -- prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "2.24.1",
+    "@prisma/client": "2.23.0",
     "apollo-server": "^2.25.2",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
@@ -71,7 +71,7 @@
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.2",
-    "prisma": "^2.24.1",
+    "prisma": "^2.23.0",
     "ts-jest": "^27.0.3",
     "ts-node": "10.0.0",
     "ts-node-dev": "1.1.6",
