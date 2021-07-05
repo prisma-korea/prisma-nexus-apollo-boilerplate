@@ -101,8 +101,15 @@ export function user(): void {
     it('should throw error when invalid gender value is given', async () => {
       const {graphqlClient} = getTestUtils();
 
+      const vars = {
+        user: {
+          name: 'HelloBro',
+          gender: 'invalid',
+        },
+      };
+
       expect(async () => {
-        await graphqlClient.request(updateProfileMutation, variables);
+        await graphqlClient.request(updateProfileMutation, vars);
       }).rejects.toThrow();
     });
 
