@@ -1,9 +1,9 @@
-# ts-apollo-prisma
+# prisma-nexus-apollo-boilerplate
 
 [![CI](https://github.com/prisma-korea/prisma-nexus-apollo-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/prisma-korea/prisma-nexus-apollo-boilerplate/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/prisma-korea/prisma-nexus-apollo-boilerplate/branch/master/graph/badge.svg?token=2FFwOcguEd)](https://codecov.io/gh/prisma-korea/prisma-nexus-apollo-boilerplate)
 
-> Boilerplate for typescript apollo server using prisma (known as Prisma 2).
+> Boilerplate for typescript apollo server using prisma and nexus (AKA Prisma 2).
 
 ## Specification
 * [node](https://nodejs.org)
@@ -14,13 +14,13 @@
 * [jest](https://jestjs.io)
 
 ## Setup environment
-1. cp `./dotenv/dev.env` `./dotenv/.env`
+1. cp `./dotenv/test.env` `./dotenv/.env`
 2. Include `DATABASE_URL`
    ```
    DATABASE_URL="postgresql://<user>:<password>@<url>:5432/postgres?schema=<scheme>"
    ```
    > Note that you should change appropriate values in `user`, `password`, `url`, `scheme` fields. Or you can even use other database. More about [connection urls](https://www.prisma.io/docs/reference/database-connectors/connection-urls)
-3. Running `yarn local` will load `env` from `dotenv/.env`.
+3. Running `yarn start` or `yarn dev` will load `env` from `dotenv/.env`.
 
 ## Generate Prisma Client and Nexus
 ```
