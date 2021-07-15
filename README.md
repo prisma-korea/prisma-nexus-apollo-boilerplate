@@ -1,7 +1,7 @@
 # ts-apollo-prisma
 
-[![CircleCI](https://circleci.com/gh/dooboolab/ts-apollo-prisma.svg?style=svg)](https://circleci.com/gh/dooboolab/ts-apollo-prisma)
-[![codecov](https://codecov.io/gh/dooboolab/ts-apollo-prisma/branch/master/graph/badge.svg)](https://codecov.io/gh/dooboolab/ts-apollo-prisma)
+[![CI](https://github.com/prisma-korea/prisma-nexus-apollo-boilerplate/actions/workflows/ci.yml/badge.svg)](https://github.com/prisma-korea/prisma-nexus-apollo-boilerplate/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/prisma-korea/prisma-nexus-apollo-boilerplate/branch/master/graph/badge.svg?token=2FFwOcguEd)](https://codecov.io/gh/prisma-korea/prisma-nexus-apollo-boilerplate)
 
 > Boilerplate for typescript apollo server using prisma (known as Prisma 2).
 
