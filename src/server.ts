@@ -1,6 +1,8 @@
 import {Server, createServer as createHttpServer} from 'http';
+import {execute, subscribe} from 'graphql';
 
 import {ApolloServer} from 'apollo-server-express';
+import {SubscriptionServer} from 'subscriptions-transport-ws';
 import {applyMiddleware} from 'graphql-middleware';
 import {createApp} from './app';
 import {createContext} from './context';
@@ -17,23 +19,30 @@ const createApolloServer = (): ApolloServer =>
     schema: schemaWithMiddleware,
     context: createContext,
     introspection: process.env.NODE_ENV !== 'production',
-    playground: process.env.NODE_ENV !== 'production',
-    subscriptions: {
-      onConnect: async (connectionParams, _webSocket, _context) => {
-        process.stdout.write('Connected to websocket\n');
-
-        // Return connection parameters for context building.
-        return {connectionParams};
-      },
-    },
   });
 
 const initializeApolloServer = (
+  httpServer: Server,
   apollo: ApolloServer,
   app: express.Application,
   port: number = 5000,
 ): (() => void) => {
   apollo.applyMiddleware({app});
+
+  const subscriptionServer = SubscriptionServer.create(
+    {
+      schema: schemaWithMiddleware,
+      execute,
+      subscribe,
+    },
+    {
+      server: httpServer,
+    },
+  );
+
+  ['SIGINT', 'SIGTERM'].forEach((signal) => {
+    process.on(signal, () => subscriptionServer.close());
+  });
 
   return (): void => {
     process.stdout.write(
@@ -49,9 +58,10 @@ export const startServer = async (
   const httpServer = createHttpServer(app);
   const apollo = createApolloServer();
 
-  apollo.installSubscriptionHandlers(httpServer);
+  await apollo.start();
 
   const handleApolloServerInit = initializeApolloServer(
+    httpServer,
     apollo,
     app,
     port as number,

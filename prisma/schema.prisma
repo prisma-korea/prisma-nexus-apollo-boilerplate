@@ -51,9 +51,10 @@ model Post {
   title     String    @db.VarChar(255)
   content   String?
   published Boolean   @default(false)
-  userId    String    @db.VarChar(255)
-  user      User      @relation(fields: [userId], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
   deletedAt DateTime?
+
+  userId String @db.VarChar(255)
+  user   User   @relation(fields: [userId], references: [id])
 }

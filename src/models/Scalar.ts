@@ -1,6 +1,6 @@
 import {asNexusMethod, enumType, scalarType} from 'nexus';
 
-import {GraphQLDate} from 'graphql-iso-date';
+import {GraphQLDateTime} from 'graphql-iso-date';
 import {GraphQLUpload} from 'graphql-upload';
 
 export const AuthType = enumType({
@@ -25,5 +25,4 @@ export const Gender = scalarType({
 });
 
 export const Upload = GraphQLUpload;
-export const DateTime = GraphQLDate;
-export const GQLDate = asNexusMethod(GraphQLDate, 'date');
+export const DateTime = asNexusMethod(GraphQLDateTime, 'date');
