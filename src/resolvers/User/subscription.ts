@@ -1,6 +1,7 @@
 import {nonNull, stringArg, subscriptionField} from 'nexus';
 
-import {withFilter} from 'apollo-server';
+import {assert} from '../../utils/assert';
+import {withFilter} from 'graphql-subscriptions';
 
 export const USER_SIGNED_IN = 'USER_SIGNED_IN';
 export const USER_UPDATED = 'USER_UPDATED';
@@ -31,12 +32,10 @@ export const userUpdated = subscriptionField('userUpdated', {
     userId: nonNull(stringArg()),
   },
   subscribe: withFilter(
-    (_, args, ctx) => {
-      const {pubsub} = ctx;
-
-      return pubsub.asyncIterator(USER_UPDATED);
-    },
+    (_, __, {pubsub}) => pubsub.asyncIterator([USER_UPDATED]),
     (payload, {userId}) => {
+      assert(userId, 'Not Authorized!');
+
       return payload.id === userId;
     },
   ),

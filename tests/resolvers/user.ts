@@ -150,7 +150,7 @@ export function user(): void {
       apolloClient
         .subscribe({
           query: userSignedInSubscription,
-          variables: {userId: userId},
+          variables: {userId},
         })
         .subscribe({
           next: ({data}) => {

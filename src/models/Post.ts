@@ -3,13 +3,13 @@ import {objectType} from 'nexus';
 export const Post = objectType({
   name: 'Post',
   definition(t) {
-    t.model.id();
-    t.model.title();
-    t.model.content();
-    t.model.published();
-    t.model.user();
-    t.model.createdAt();
-    t.model.updatedAt();
-    t.model.deletedAt();
+    t.int('id');
+    t.string('title');
+    t.string('content');
+    t.boolean('published');
+
+    t.date('createdAt');
+    t.date('updatedAt');
+    t.date('deletedAt');
   },
 });

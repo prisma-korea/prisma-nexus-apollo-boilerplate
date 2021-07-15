@@ -1,20 +1,22 @@
 import * as path from 'path';
 import * as types from './types';
 
-import {makeSchema} from 'nexus';
-import {nexusSchemaPrisma} from 'nexus-plugin-prisma/schema';
+import {connectionPlugin, fieldAuthorizePlugin, makeSchema} from 'nexus';
+
+import {validationPlugin} from 'nexus-validation-plugin';
 
 export const schema = makeSchema({
   types,
   plugins: [
-    nexusSchemaPrisma({
-      outputs: {
-        typegen: path.join(
-          __dirname,
-          'generated/typegen-nexus-plugin-prisma.d.ts',
-        ),
+    fieldAuthorizePlugin({
+      formatError: (authConfig) => authConfig.error,
+    }),
+    connectionPlugin({
+      cursorFromNode(node) {
+        return node.id;
       },
     }),
+    validationPlugin(),
   ],
   outputs: {
     schema: path.join(__dirname, './generated/schema.graphql'),
