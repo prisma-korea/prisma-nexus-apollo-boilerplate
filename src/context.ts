@@ -14,7 +14,7 @@ export interface Context {
   userId: string | null;
 }
 
-const pubsub = new PubSub();
+export const pubsub = new PubSub();
 
 const createPrismaClient = (): PrismaClient => {
   const prisma = new PrismaClient();

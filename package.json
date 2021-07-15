@@ -5,7 +5,8 @@
   "repository": "https://github.com/dooboolab/ts-apollo-prisma",
   "license": "MIT",
   "scripts": {
-    "start": "dotenv -e ./dotenv/dev.env -- ts-node-dev --respawn --transpile-only --files src/server.ts",
+    "start": "dotenv -e ./dotenv/dev.env -- ts-node --transpile-only --files src/server.ts",
+    "dev": "dotenv -e ./dotenv/dev.env -- ts-node-dev --respawn --transpile-only --files src/server.ts",
     "prod": "node dist/server",
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src tests",
@@ -27,6 +28,7 @@
     "studio": "dotenv -e ./dotenv/.env -- prisma studio"
   },
   "dependencies": {
+    "@graphql-tools/schema": "^7.1.5",
     "@prisma/client": "2.27.0",
     "@types/ejs": "^3.0.7",
     "apollo-server": "^3.0.0",

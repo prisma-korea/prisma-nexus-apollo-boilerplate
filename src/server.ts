@@ -1,16 +1,17 @@
 import {Server, createServer as createHttpServer} from 'http';
+import {createContext, prisma, pubsub} from './context';
 import {execute, subscribe} from 'graphql';
 
 import {ApolloServer} from 'apollo-server-express';
 import {SubscriptionServer} from 'subscriptions-transport-ws';
 import {applyMiddleware} from 'graphql-middleware';
 import {createApp} from './app';
-import {createContext} from './context';
 import express from 'express';
+import {getUserId} from './utils/auth';
 import {permissions} from './permissions';
 import {schema} from './schema';
 
-const {NODE_ENV} = process.env;
+const {NODE_ENV, JWT_SECRET} = process.env;
 
 const schemaWithMiddleware = applyMiddleware(schema, permissions);
 
@@ -25,7 +26,7 @@ const initializeApolloServer = (
   httpServer: Server,
   apollo: ApolloServer,
   app: express.Application,
-  port: number = 5000,
+  port: number = 5018,
 ): (() => void) => {
   apollo.applyMiddleware({app});
 
@@ -34,9 +35,22 @@ const initializeApolloServer = (
       schema: schemaWithMiddleware,
       execute,
       subscribe,
+      onConnect: async (connectionParams, _webSocket, _context) => {
+        process.stdout.write('Connected to websocket\n');
+
+        // Return connection parameters for context building.
+        return {
+          appSecret: JWT_SECRET,
+          connectionParams,
+          prisma,
+          userId: getUserId(connectionParams?.Authorization),
+          pubsub,
+        };
+      },
     },
     {
       server: httpServer,
+      path: apollo.graphqlPath,
     },
   );
 
@@ -53,7 +67,7 @@ const initializeApolloServer = (
 
 export const startServer = async (
   app: express.Application,
-  port: number | string = 5000,
+  port: number | string = 5018,
 ): Promise<Server> => {
   const httpServer = createHttpServer(app);
   const apollo = createApolloServer();
