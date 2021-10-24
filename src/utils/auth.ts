@@ -49,7 +49,10 @@ export const getToken = (req: Request & any): string | undefined => {
 
   if (!authHeader) return undefined;
 
-  return authHeader.replace('Bearer ', '');
+  const token = authHeader.replace('Bearer ', '');
+  const verifiedToken = verify(token, APP_SECRET) as Token;
+
+  return verifiedToken && verifiedToken.userId;
 };
 
 export const encryptCredential = async (password: string): Promise<string> => {

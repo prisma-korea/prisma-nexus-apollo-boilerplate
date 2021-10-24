@@ -18,8 +18,6 @@ import {startServer} from '../src/server';
 // @ts-ignore
 global.Headers = global.Headers || Headers;
 
-jest.setTimeout(30000);
-
 const {PORT = 5566, DATABASE_URL} = process.env;
 
 export const testSubscriptionHost = `ws://localhost:${PORT}/graphql`;
@@ -29,13 +27,10 @@ assert(DATABASE_URL, 'Missing DATABASE_URL test environment varialbe.');
 
 beforeAll(async () => {
   const prisma = new PrismaClient();
+  await prisma.$executeRawUnsafe('DROP SCHEMA IF EXISTS public CASCADE');
+  await prisma.$executeRawUnsafe('CREATE SCHEMA public');
 
   execSync('yarn db-push:test --accept-data-loss', {env: process.env});
-
-  // Migrate test database.
-  const prismaBinary = path.join(__dirname, '../node_modules/.bin/prisma');
-
-  execSync(`${prismaBinary} db push --preview-feature`, {env: process.env});
 
   // Start server.
   const app: express.Application = createApp();
