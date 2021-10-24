@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { defaults: tsjPreset } = require('ts-jest/presets');
+const {defaults: tsjPreset} = require('ts-jest/presets');
 
 module.exports = {
   globals: {
@@ -7,21 +7,14 @@ module.exports = {
       tsconfig: 'tsconfig.json',
       diagnostics: false,
     },
-    fetch: require('node-fetch'),
   },
   preset: 'ts-jest',
-  moduleFileExtensions: [
-    'ts',
-    'js',
-    'json',
-  ],
+  moduleFileExtensions: ['ts', 'js', 'json'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
     ...tsjPreset.transform,
   },
-  testMatch: [
-    '**/tests/**/*.test.(ts|js)',
-  ],
+  testMatch: ['**/tests/**/*.test.(ts|js)'],
   setupFilesAfterEnv: ['./tests/testSetup.ts'],
   testEnvironment: 'node',
 };

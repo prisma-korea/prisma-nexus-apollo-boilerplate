@@ -27,22 +27,10 @@ export const testHost = `http://localhost:${PORT}/graphql`;
 
 assert(DATABASE_URL, 'Missing DATABASE_URL test environment varialbe.');
 
-function getSchemaName(dbUrl: string): string {
-  const ret = new URL(dbUrl).searchParams.get('schema');
-
-  assert(ret, 'Missing schema name in test environment variable.');
-
-  return ret;
-}
-
-const SCHEMA = getSchemaName(DATABASE_URL);
-
 beforeAll(async () => {
   const prisma = new PrismaClient();
 
-  // Create test schema.
-  await prisma.$executeRaw(`DROP SCHEMA IF EXISTS "${SCHEMA}" CASCADE`);
-  await prisma.$executeRaw(`CREATE SCHEMA "${SCHEMA}"`);
+  execSync('yarn db-push:test --accept-data-loss', {env: process.env});
 
   // Migrate test database.
   const prismaBinary = path.join(__dirname, '../node_modules/.bin/prisma');
@@ -90,9 +78,6 @@ afterAll(async () => {
 
     networkInterface.close();
   });
-
-  // Drop test schema.
-  await prisma.$executeRaw(`DROP SCHEMA "${SCHEMA}" CASCADE`);
 
   // Disconnect prisma client.
   await prisma.$disconnect();

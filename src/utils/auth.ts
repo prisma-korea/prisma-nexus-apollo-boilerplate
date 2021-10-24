@@ -24,7 +24,7 @@ const envPath =
     : path.resolve(__dirname, '../dotenv/.env');
 
 // eslint-disable-next-line
-require('dotenv').config({ path: envPath });
+require('dotenv').config({path: envPath});
 
 interface Token {
   userId: string;
@@ -37,7 +37,8 @@ interface Token {
 export function getUserId(authorization: string): string | null {
   if (!authorization) return null;
 
-  const verifiedToken = verify(authorization, APP_SECRET) as Token;
+  const token = authorization.replace('Bearer ', '');
+  const verifiedToken = verify(token, APP_SECRET) as Token;
 
   return verifiedToken && verifiedToken.userId;
 }
