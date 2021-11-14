@@ -17,7 +17,9 @@ export const Gender = scalarType({
   name: 'Gender',
   asNexusMethod: 'gender',
   parseValue(value: GenderType): GenderType | undefined {
-    if (GenderType[value]) return value;
+    if (GenderType[value]) {
+      return value;
+    }
   },
   serialize(value) {
     return value;

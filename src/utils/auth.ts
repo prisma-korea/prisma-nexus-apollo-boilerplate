@@ -35,7 +35,9 @@ interface Token {
  * @returns user id if available. null otherwise.
  */
 export function getUserId(authorization: string): string | null {
-  if (!authorization) return null;
+  if (!authorization) {
+    return null;
+  }
 
   const token = authorization.replace('Bearer ', '');
   const verifiedToken = verify(token, APP_SECRET) as Token;
@@ -47,7 +49,9 @@ export function getUserId(authorization: string): string | null {
 export const getToken = (req: Request & any): string | undefined => {
   const authHeader = req.get('Authorization');
 
-  if (!authHeader) return undefined;
+  if (!authHeader) {
+    return undefined;
+  }
 
   const token = authHeader.replace('Bearer ', '');
   const verifiedToken = verify(token, APP_SECRET) as Token;
@@ -73,7 +77,9 @@ export const validateCredential = async (
     hashedValue = hashedValue.replace(/dot$/g, '.');
 
     bcrypt.compare(value, hashedValue, (err, res) => {
-      if (err) return reject(err);
+      if (err) {
+        return reject(err);
+      }
 
       resolve(res);
     });

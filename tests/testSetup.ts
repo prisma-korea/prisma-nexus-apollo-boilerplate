@@ -67,8 +67,11 @@ afterAll(async () => {
   // Close server.
   await new Promise((resolve, reject) => {
     server.close((err) => {
-      if (err) reject(err);
-      else resolve(undefined);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(undefined);
+      }
     });
 
     networkInterface.close();

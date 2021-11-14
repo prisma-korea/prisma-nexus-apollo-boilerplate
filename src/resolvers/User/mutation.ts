@@ -72,12 +72,16 @@ export const signIn = mutationField('signIn', {
       },
     });
 
-    if (!user) throw new Error(`No user found for email: ${email}`);
+    if (!user) {
+      throw new Error(`No user found for email: ${email}`);
+    }
 
     const passwordValid =
       (await compare(password, user.password || '')) || false;
 
-    if (!passwordValid) throw new Error('Invalid password');
+    if (!passwordValid) {
+      throw new Error('Invalid password');
+    }
 
     pubsub.publish(USER_SIGNED_IN, user);
 
