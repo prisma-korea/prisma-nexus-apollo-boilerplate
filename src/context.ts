@@ -26,29 +26,43 @@ const createPrismaClient = (): PrismaClient => {
   const prisma = new PrismaClient();
 
   //! Specify soft deletion models here.
-  // prisma.$use(async (params, next) => {
-  //   const softDeletionModels = [
-  //   ];
+  prisma.$use(async (params, next) => {
+    const softDeletionModels = ['User', 'Post'];
 
-  //   if (params.model && softDeletionModels.includes(params.model)) {
-  //     if (params.action === 'delete') {
-  //       params.action = 'update';
-  //       params.args.data = { deletedAt: new Date().toISOString() };
-  //     }
+    if (params.model && softDeletionModels.includes(params.model)) {
+      if (params.action === 'delete') {
+        params.action = 'update';
+        params.args.data = {deletedAt: new Date().toISOString()};
+      }
 
-  //     if (params.action === 'deleteMany') {
-  //       params.action = 'updateMany';
+      if (params.action === 'deleteMany') {
+        params.action = 'updateMany';
 
-  //       if (params.args.data !== undefined) {
-  //         params.args.data.deletedAt = new Date().toISOString();
-  //       } else {
-  //         params.args.data = { deletedAt: new Date().toISOString() };
-  //       }
-  //     }
-  //   }
+        if (params.args.data !== undefined) {
+          params.args.data.deletedAt = new Date().toISOString();
+        } else {
+          params.args.data = {deletedAt: new Date().toISOString()};
+        }
+      }
 
-  //   return next(params);
-  // });
+      if (params.action === 'findUnique') {
+        params.action = 'findFirst';
+        params.args.where.deletedAt = null;
+      }
+
+      if (params.action === 'findMany' || params.action === 'findFirst') {
+        if (params.args.where !== undefined) {
+          if (params.args.where.deletedAt === undefined) {
+            params.args.where.deletedAt = null;
+          }
+        } else {
+          params.args.where = {deletedAt: null};
+        }
+      }
+    }
+
+    return next(params);
+  });
 
   return prisma;
 };
