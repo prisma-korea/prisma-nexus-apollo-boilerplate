@@ -1,7 +1,6 @@
 node_modules/
 dist/
 coverage/
-yarn-error.log
 package-lock.json
 .DS_Store
 
@@ -11,3 +10,13 @@ dotenv/.env
 prisma/.env
 src/generated
 
+yarn-error*
+
+# yarn2
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
