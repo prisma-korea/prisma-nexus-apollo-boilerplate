@@ -1,13 +1,12 @@
 import express, {Express} from 'express';
 
-import cors from 'cors';
 import ejs from 'ejs';
 import path from 'path';
 
 export const createApp = (): Express => {
   const app = express();
-
-  app.use(cors());
+  app.use(express.urlencoded({extended: true}));
+  app.use(express.json());
 
   app.get('/', (req, res) => {
     res.send('It works - ver. 0.0.1');
