@@ -46,6 +46,11 @@ const createPrismaClient = (): PrismaClient => {
       }
 
       if (params.action === 'findUnique') {
+        // This prevents from converting action to `findFirst` when queried with unique keys.
+        if (Object.keys(params.args.where).some((el) => el.includes('_'))) {
+          return next(params);
+        }
+
         params.action = 'findFirst';
         params.args.where.deletedAt = null;
       }

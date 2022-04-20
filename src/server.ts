@@ -8,7 +8,7 @@ import express from 'express';
 import {permissions} from './permissions';
 import {schema} from './schema';
 
-const {NODE_ENV, PORT = 6000} = process.env;
+const {NODE_ENV, PORT = 5051} = process.env;
 
 export const schemaWithMiddleware = applyMiddleware(schema, permissions);
 
