@@ -153,29 +153,36 @@ export function user(): void {
           variables: {userId},
         })
         .subscribe({
-          next: ({data}) => {
+          next: async ({data}) => {
+            const variables = {
+              email: 'newUser1@dooboolab.com',
+              password: 'password123!',
+            };
+
+            const response2 = await graphqlClient.request(
+              signInMutation,
+              variables,
+            );
+
+            expect(response2).toHaveProperty('signIn');
+            expect(response2.signIn).toHaveProperty('token');
+            expect(response2.signIn).toHaveProperty('user');
+            expect(response2.signIn.user.id).toEqual(subscriptionValue.id);
+            expect(response2.signIn.user.email).toEqual(
+              subscriptionValue.email,
+            );
+            expect(response2.signIn.user.name).toEqual(subscriptionValue.name);
+            expect(response2.signIn.user.gender).toEqual(
+              subscriptionValue.gender,
+            );
+
+            expect(response2.signIn.user.createdAt).toEqual(
+              subscriptionValue.createdAt,
+            );
+
             return (subscriptionValue = data.userSignedIn);
           },
         });
-
-      const variables = {
-        email: 'newUser1@dooboolab.com',
-        password: 'password123!',
-      };
-
-      const response2 = await graphqlClient.request(signInMutation, variables);
-
-      expect(response2).toHaveProperty('signIn');
-      expect(response2.signIn).toHaveProperty('token');
-      expect(response2.signIn).toHaveProperty('user');
-      expect(response2.signIn.user.id).toEqual(subscriptionValue.id);
-      expect(response2.signIn.user.email).toEqual(subscriptionValue.email);
-      expect(response2.signIn.user.name).toEqual(subscriptionValue.name);
-      expect(response2.signIn.user.gender).toEqual(subscriptionValue.gender);
-
-      expect(response2.signIn.user.createdAt).toEqual(
-        subscriptionValue.createdAt,
-      );
     });
 
     it("should subscribe 'userUpdated' after 'updateProfile' mutation", async () => {
