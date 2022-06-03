@@ -4279,6 +4279,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-ws@npm:^5.8.2":
+  version: 5.8.2
+  resolution: "graphql-ws@npm:5.8.2"
+  peerDependencies:
+    graphql: ">=0.11 <=16"
+  checksum: 2f7701ffc531f053c47fd42ea1fa4555775195f621f1ff767d668eef41ab1376900c1ef166c0063dbc81aa49a2aabd60becb517b8d1b7bc0b3dd687bd4d319a6
+  languageName: node
+  linkType: hard
+
 "graphql@npm:^15.1.0":
   version: 15.8.0
   resolution: "graphql@npm:15.8.0"
@@ -6446,6 +6455,7 @@ __metadata:
     graphql-subscriptions: ^2.0.0
     graphql-tag: ^2.12.6
     graphql-upload: ^13.0.0
+    graphql-ws: ^5.8.2
     jest: 27.4.7
     jsonwebtoken: ^8.5.1
     nexus: ^1.1.0
@@ -6458,6 +6468,7 @@ __metadata:
     ts-node: 10.4.0
     ts-node-dev: 1.1.8
     typescript: ^4.5.5
+    ws: ^8.7.0
   languageName: unknown
   linkType: soft
 
@@ -7933,6 +7944,21 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 0c2ffc9a539dd61dd2b00ff6cc5c98a3371e2521011fe23da4b3578bb7ac26cbdf7ca8a68e8e08023c122ae247013216dde2a20c908de415a6bcc87bdef68c87
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.7.0":
+  version: 8.7.0
+  resolution: "ws@npm:8.7.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 078fa2dbc06b31a45e0057b19e2930d26c222622e355955afe019c9b9b25f62eb2a8eff7cceabdad04910ecd2bd6ef4fa48e6f3673f2fdddff02a6e4c2459584
   languageName: node
   linkType: hard
 
