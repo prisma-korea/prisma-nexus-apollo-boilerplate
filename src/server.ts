@@ -2,21 +2,37 @@ import {Server, createServer as createHttpServer} from 'http';
 import {createContext, runSubscriptionServer} from './context';
 
 import {ApolloServer} from 'apollo-server-express';
+import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core';
+import {Disposable} from 'graphql-ws';
 import {applyMiddleware} from 'graphql-middleware';
 import {createApp} from './app';
 import express from 'express';
 import {permissions} from './permissions';
 import {schema} from './schema';
 
-const {NODE_ENV, PORT = 6000} = process.env;
-
 export const schemaWithMiddleware = applyMiddleware(schema, permissions);
 
-const createApolloServer = (): ApolloServer =>
+const {NODE_ENV, PORT = 6001} = process.env;
+
+let serverCleanup: Disposable;
+
+const createApolloServer = (httpServer: Server): ApolloServer =>
   new ApolloServer({
     schema: schemaWithMiddleware,
     context: createContext,
     introspection: process.env.NODE_ENV !== 'production',
+    plugins: [
+      ApolloServerPluginDrainHttpServer({httpServer}),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              serverCleanup?.dispose();
+            },
+          };
+        },
+      },
+    ],
   });
 
 const initializeApolloServer = (
@@ -26,8 +42,7 @@ const initializeApolloServer = (
   port: number,
 ): (() => void) => {
   apollo.applyMiddleware({app});
-
-  runSubscriptionServer(httpServer, apollo);
+  serverCleanup = runSubscriptionServer(httpServer, apollo);
 
   return (): void => {
     process.stdout.write(
@@ -41,7 +56,7 @@ export const startServer = async (
   port: number | string,
 ): Promise<Server> => {
   const httpServer = createHttpServer(app);
-  const apollo = createApolloServer();
+  const apollo = createApolloServer(httpServer);
 
   await apollo.start();
 

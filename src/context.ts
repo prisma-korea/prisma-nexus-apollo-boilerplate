@@ -1,16 +1,16 @@
-import {execute, subscribe} from 'graphql';
-
 import {ApolloServer} from 'apollo-server-express';
+import {Disposable} from 'graphql-ws';
 import {PrismaClient} from '@prisma/client';
 import {PubSub} from 'graphql-subscriptions';
 import {Server} from 'http';
-import {SubscriptionServer} from 'subscriptions-transport-ws';
+import {WebSocketServer} from 'ws';
 import {assert} from './utils/assert';
 import express from 'express';
 import {getUserId} from './utils/auth';
 import {schemaWithMiddleware} from './server';
+import {useServer} from 'graphql-ws/lib/use/ws';
 
-const {JWT_SECRET} = process.env;
+const {JWT_SECRET, NODE_ENV} = process.env;
 
 export interface Context {
   request: {req: ReqI18n};
@@ -97,32 +97,41 @@ export function createContext(params: CreateContextParams): Context {
 export const runSubscriptionServer = (
   httpServer: Server,
   apollo: ApolloServer,
-): void => {
-  const subscriptionServer = SubscriptionServer.create(
+): Disposable => {
+  const subscriptionServer = new WebSocketServer({
+    server: httpServer,
+    path: apollo.graphqlPath,
+  });
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const serverCleanup = useServer(
     {
       schema: schemaWithMiddleware,
-      execute,
-      subscribe,
-      onConnect: async (connectionParams, _webSocket, _context) => {
+      context: async (ctx) => {
         process.stdout.write('Connected to websocket\n');
 
         // Return connection parameters for context building.
         return {
-          connectionParams,
+          connectionParams: ctx.connectionParams,
           prisma,
           pubsub,
           appSecret: JWT_SECRET,
-          userId: getUserId(connectionParams?.Authorization),
+          userId: getUserId(
+            // @ts-ignore
+            ctx.connectionParams?.Authorization ||
+              ctx.connectionParams?.authorization,
+          ),
         };
       },
     },
-    {
-      server: httpServer,
-      path: apollo.graphqlPath,
-    },
+    subscriptionServer,
   );
 
-  ['SIGINT', 'SIGTERM'].forEach((signal) => {
-    process.on(signal, () => subscriptionServer.close());
-  });
+  if (NODE_ENV === 'production') {
+    ['SIGINT', 'SIGTERM'].forEach((signal) => {
+      process.on(signal, () => subscriptionServer.close());
+    });
+  }
+
+  return serverCleanup;
 };
