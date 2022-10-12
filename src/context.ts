@@ -1,11 +1,11 @@
-import {ApolloServer} from 'apollo-server-express';
-import {Disposable} from 'graphql-ws';
+import type {ApolloServer} from 'apollo-server-express';
+import type {Disposable} from 'graphql-ws';
 import {PrismaClient} from '@prisma/client';
 import {PubSub} from 'graphql-subscriptions';
-import {Server} from 'http';
+import type {Server} from 'http';
 import {WebSocketServer} from 'ws';
 import {assert} from './utils/assert';
-import express from 'express';
+import type express from 'express';
 import {getUserId} from './utils/auth';
 import {schemaWithMiddleware} from './server';
 import {useServer} from 'graphql-ws/lib/use/ws';

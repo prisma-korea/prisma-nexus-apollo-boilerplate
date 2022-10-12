@@ -16,7 +16,7 @@ import {assert} from '../src/utils/assert';
 import {createApp} from '../src/app';
 import {createClient} from 'graphql-ws';
 import {execSync} from 'child_process';
-import express from 'express';
+import type express from 'express';
 import {getMainDefinition} from '@apollo/client/utilities';
 import {startServer} from '../src/server';
 

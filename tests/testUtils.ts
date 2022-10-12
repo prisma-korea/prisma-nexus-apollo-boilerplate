@@ -1,9 +1,9 @@
-import {ApolloClient, NormalizedCacheObject} from '@apollo/client/core';
+import type {ApolloClient, NormalizedCacheObject} from '@apollo/client/core';
 
-import {Client} from 'graphql-ws';
-import {GraphQLClient} from 'graphql-request';
-import {PrismaClient} from '@prisma/client';
-import {Server} from 'http';
+import type {Client} from 'graphql-ws';
+import type {GraphQLClient} from 'graphql-request';
+import type {PrismaClient} from '@prisma/client';
+import type {Server} from 'http';
 import {assert} from '../src/utils/assert';
 
 export class TestUtils {

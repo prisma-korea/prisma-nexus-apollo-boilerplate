@@ -1,12 +1,13 @@
-import {Server, createServer as createHttpServer} from 'http';
+import type {Server} from 'http';
+import {createServer as createHttpServer} from 'http';
 import {createContext, runSubscriptionServer} from './context';
 
 import {ApolloServer} from 'apollo-server-express';
 import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core';
-import {Disposable} from 'graphql-ws';
+import type {Disposable} from 'graphql-ws';
 import {applyMiddleware} from 'graphql-middleware';
 import {createApp} from './app';
-import express from 'express';
+import type express from 'express';
 import {permissions} from './permissions';
 import {schema} from './schema';
 
