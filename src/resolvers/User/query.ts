@@ -1,5 +1,6 @@
-import {assert} from '../../utils/assert';
 import {queryField} from 'nexus';
+
+import {assert} from '../../utils/assert';
 
 export const me = queryField('me', {
   type: 'User',

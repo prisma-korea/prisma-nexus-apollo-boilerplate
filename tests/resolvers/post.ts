@@ -1,3 +1,5 @@
+import {getTestUtils} from '../testUtils';
+
 import {
   createDraftMutation,
   deletePostMutation,
@@ -6,8 +8,6 @@ import {
   postQuery,
   publishMutation,
 } from './queries';
-
-import {getTestUtils} from '../testUtils';
 
 export function post(): void {
   describe('Post', () => {

@@ -1,9 +1,8 @@
-import type {Express} from 'express';
-import express from 'express';
-
 import {altairExpress} from 'altair-express-middleware';
 import cors from 'cors';
 import ejs from 'ejs';
+import type {Express} from 'express';
+import express from 'express';
 import path from 'path';
 
 const {PORT = 6001} = process.env;

@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import path from 'path';
 import {verify} from 'jsonwebtoken';
+import path from 'path';
 
 const SALT_ROUND = 10;
 

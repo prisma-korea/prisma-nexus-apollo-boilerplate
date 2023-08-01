@@ -1,14 +1,15 @@
-import type {ApolloServer} from 'apollo-server-express';
-import type {Disposable} from 'graphql-ws';
 import {PrismaClient} from '@prisma/client';
+import type {ApolloServer} from 'apollo-server-express';
+import type express from 'express';
 import {PubSub} from 'graphql-subscriptions';
+import type {Disposable} from 'graphql-ws';
+import {useServer} from 'graphql-ws/lib/use/ws';
 import type {Server} from 'http';
 import {WebSocketServer} from 'ws';
+
 import {assert} from './utils/assert';
-import type express from 'express';
 import {getUserId} from './utils/auth';
 import {schemaWithMiddleware} from './server';
-import {useServer} from 'graphql-ws/lib/use/ws';
 
 const {JWT_SECRET, NODE_ENV} = process.env;
 

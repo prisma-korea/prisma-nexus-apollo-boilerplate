@@ -6,19 +6,20 @@ import {
   InMemoryCache,
   split,
 } from '@apollo/client/core';
-import {TestUtils, getTestUtils, setTestUtils} from './testUtils';
-
-import {GraphQLClient} from 'graphql-request';
 import {GraphQLWsLink} from '@apollo/client/link/subscriptions';
-import NodeWebSocket from 'ws';
+import {getMainDefinition} from '@apollo/client/utilities';
 import {PrismaClient} from '@prisma/client';
-import {assert} from '../src/utils/assert';
-import {createApp} from '../src/app';
-import {createClient} from 'graphql-ws';
 import {execSync} from 'child_process';
 import type express from 'express';
-import {getMainDefinition} from '@apollo/client/utilities';
+import {GraphQLClient} from 'graphql-request';
+import {createClient} from 'graphql-ws';
+import NodeWebSocket from 'ws';
+
+import {createApp} from '../src/app';
 import {startServer} from '../src/server';
+import {assert} from '../src/utils/assert';
+
+import {getTestUtils, setTestUtils, TestUtils} from './testUtils';
 
 // @ts-ignore
 // global.Headers = global.Headers || Headers;

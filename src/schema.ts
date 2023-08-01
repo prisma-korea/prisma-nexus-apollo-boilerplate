@@ -1,9 +1,8 @@
-import * as path from 'path';
-import * as types from './types';
-
 import {connectionPlugin, fieldAuthorizePlugin, makeSchema} from 'nexus';
-
 import {validationPlugin} from 'nexus-validation-plugin';
+import * as path from 'path';
+
+import * as types from './types';
 
 export const schema = makeSchema({
   types,

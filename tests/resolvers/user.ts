@@ -1,3 +1,6 @@
+import {testHost} from '../testSetup';
+import {getTestUtils} from '../testUtils';
+
 import {
   meQuery,
   signInMutation,
@@ -6,9 +9,6 @@ import {
   userSignedInSubscription,
   userUpdatedSubscription,
 } from './queries';
-
-import {getTestUtils} from '../testUtils';
-import {testHost} from '../testSetup';
 
 const userVariables = {
   user: {

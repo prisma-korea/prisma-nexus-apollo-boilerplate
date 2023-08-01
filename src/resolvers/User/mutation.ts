@@ -1,10 +1,11 @@
-import {USER_SIGNED_IN, USER_UPDATED} from './subscription';
 import {compare, hash} from 'bcryptjs';
+import {sign} from 'jsonwebtoken';
 import {inputObjectType, mutationField, nonNull, stringArg} from 'nexus';
 
-import {APP_SECRET} from '../../utils/auth';
 import {assert} from '../../utils/assert';
-import {sign} from 'jsonwebtoken';
+import {APP_SECRET} from '../../utils/auth';
+
+import {USER_SIGNED_IN, USER_UPDATED} from './subscription';
 
 export const UserInputType = inputObjectType({
   name: 'UserCreateInput',

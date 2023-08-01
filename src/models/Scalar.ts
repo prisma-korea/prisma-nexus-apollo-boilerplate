@@ -1,8 +1,7 @@
-import {asNexusMethod, enumType, scalarType} from 'nexus';
-
 import {GraphQLDateTime} from 'graphql-iso-date';
 // @ts-ignore
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.js';
+import {asNexusMethod, enumType, scalarType} from 'nexus';
 
 export const AuthType = enumType({
   name: 'AuthType',
